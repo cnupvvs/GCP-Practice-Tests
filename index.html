@@ -240,12 +240,13 @@ const ADMIN_CODE = "ACE-ADMIN-2026";
 const MODULE_ORDER = Object.keys(QUESTION_BANK);
 const TOTAL_QUESTIONS = MODULE_ORDER.length * QUESTIONS_PER_MODULE;
 
-// ---- Cloud storage bucket (KVdb.io) ----
+// ---- Cloud storage (Firebase Realtime Database) ----
 // This app is a static file with no server of its own, so it needs a small
-// free cloud key-value bucket to keep scores in sync across every student
-// and across every device. Leave this as "REPLACE_ME" and the app will walk
-// you through creating one, the first time you open the page.
-const KVDB_BUCKET_ID = "REPLACE_ME";
+// free cloud database to keep every student's roll number, attempts, and
+// scores in sync across every device. Leave this as "REPLACE_ME" and the
+// app will show setup instructions the first time you open the page.
+// It should look like: https://YOUR-PROJECT-default-rtdb.firebaseio.com
+const FIREBASE_DB_URL = "REPLACE_ME";
 
 /* ===================== STATE ===================== */
 let state = {
@@ -264,27 +265,31 @@ let state = {
 const app = document.getElementById('app');
 let timerHandle = null;
 
-/* ===================== STORAGE HELPERS (KVdb.io) ===================== */
-const KVDB_BASE = 'https://kvdb.io/' + KVDB_BUCKET_ID + '/';
+/* ===================== STORAGE HELPERS (Firebase Realtime Database) ===================== */
+const FB_BASE = (FIREBASE_DB_URL || '').replace(/\/$/, '');
 
-async function storageGet(key) {
+function fbPath(path) {
+  return FB_BASE + '/' + path + '.json';
+}
+
+async function fbGet(path) {
   try {
-    const res = await fetch(KVDB_BASE + encodeURIComponent(key));
-    if (res.status === 404) return null;
+    const res = await fetch(fbPath(path));
     if (!res.ok) { state.storageDown = true; return null; }
     state.storageDown = false;
-    const text = await res.text();
-    return text === '' ? null : text;
+    const data = await res.json();
+    return data === null ? null : data;
   } catch (e) {
     state.storageDown = true;
     return null;
   }
 }
-async function storageSet(key, value) {
+async function fbPut(path, value) {
   try {
-    const res = await fetch(KVDB_BASE + encodeURIComponent(key), {
-      method: 'POST',
-      body: value
+    const res = await fetch(fbPath(path), {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(value)
     });
     state.storageDown = !res.ok;
     return res.ok;
@@ -294,113 +299,97 @@ async function storageSet(key, value) {
     return false;
   }
 }
-async function storageDelete(key) {
+async function fbDelete(path) {
   try {
-    await fetch(KVDB_BASE + encodeURIComponent(key), { method: 'DELETE' });
+    await fetch(fbPath(path), { method: 'DELETE' });
   } catch (e) { /* ignore */ }
-}
-async function storageList(prefix) {
-  try {
-    const res = await fetch(KVDB_BASE + '?prefix=' + encodeURIComponent(prefix) + '&format=json&limit=10000');
-    if (!res.ok) { state.storageDown = true; return []; }
-    state.storageDown = false;
-    const arr = await res.json();
-    return Array.isArray(arr) ? arr : [];
-  } catch (e) {
-    state.storageDown = true;
-    return [];
-  }
-}
-
-/* ===================== FIRST-RUN BUCKET SETUP ===================== */
-async function createKvdbBucket(email) {
-  const res = await fetch('https://kvdb.io', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: 'email=' + encodeURIComponent(email)
-  });
-  if (!res.ok) throw new Error('Could not create a bucket (HTTP ' + res.status + ').');
-  const bucketId = (await res.text()).trim();
-  // Note: keys in a free-tier bucket expire after 7 days of no updates.
-  // That's fine for a single exam window. (Disabling expiry entirely is a
-  // paid-plan feature on kvdb.io, so we deliberately don't attempt it here
-  // — trying to do so caused the free bucket to reject writes.)
-  return bucketId;
 }
 
 function renderSetup(){
   app.innerHTML = `
     <div class="screen">
       <div class="eyebrow">One-time setup</div>
-      <h1 class="hero">Connect a storage bucket</h1>
-      <p class="lede">This exam app needs a small free cloud bucket (via kvdb.io) to keep every student's roll number, attempts, and scores in sync. This only has to be done once, by whoever is setting the exam up &mdash; students will never see this screen once it's configured.</p>
+      <h1 class="hero">Connect a free database</h1>
+      <p class="lede">This exam app needs a small free cloud database (via Firebase, Google's free-tier realtime database) to keep every student's roll number, attempts, and scores in sync. This only has to be done once, by whoever is setting the exam up &mdash; students will never see this screen once it's configured. It takes about five minutes and only needs a Google account.</p>
       <div class="card">
-        <div class="field">
-          <label for="setup-email">Your email (used only to recover the bucket if needed)</label>
-          <input id="setup-email" type="email" placeholder="you@example.com" autocomplete="off" />
+        <div class="jumpgrid-label" style="margin-bottom:10px;">Steps</div>
+        <div style="font-size:13.5px;color:var(--text-muted);line-height:2;">
+          1. Go to <span class="mono">console.firebase.google.com</span> and sign in.<br/>
+          2. Click <b>Add project</b>, give it any name, and finish creating it (you can skip Google Analytics).<br/>
+          3. In the left sidebar under <b>Build</b>, click <b>Realtime Database</b>, then <b>Create Database</b>. Pick any location and start in locked mode.<br/>
+          4. Once it's created, open the <b>Rules</b> tab and replace the contents with:<br/>
+          <span class="mono" style="display:block;background:var(--surface-3);padding:10px 12px;border-radius:8px;margin:8px 0;">{ "rules": { ".read": true, ".write": true } }</span>
+          Click <b>Publish</b>. This makes the database open to anyone with the link (needed since students don't log into anything) &mdash; don't put other sensitive data in this same Firebase project.<br/>
+          5. Go to the <b>Data</b> tab and copy the URL shown at the top of the page (it looks like <span class="mono">https://your-project-default-rtdb.firebaseio.com</span>).<br/>
+          6. Paste that URL below.
+        </div>
+        <div class="field" style="margin-top:18px;">
+          <label for="setup-url">Firebase Database URL</label>
+          <input id="setup-url" type="text" placeholder="https://your-project-default-rtdb.firebaseio.com" autocomplete="off" />
         </div>
         <div class="error-text" id="setup-error"></div>
-        <button class="btn btn-primary btn-block" id="setup-btn" style="margin-top:10px;">Create storage bucket</button>
+        <button class="btn btn-primary btn-block" id="setup-btn" style="margin-top:10px;">Check connection</button>
         <div id="setup-result" style="margin-top:20px;"></div>
       </div>
     </div>
   `;
   document.getElementById('setup-btn').onclick = async () => {
-    const email = document.getElementById('setup-email').value.trim();
+    const url = document.getElementById('setup-url').value.trim().replace(/\/$/, '');
     const errEl = document.getElementById('setup-error');
     const btn = document.getElementById('setup-btn');
-    if (!email) { errEl.textContent = 'Please enter an email address.'; return; }
+    if (!url || !/^https:\/\/.+firebaseio\.com$|^https:\/\/.+firebasedatabase\.app$/.test(url)) {
+      errEl.textContent = 'Paste the full Firebase Database URL shown on your Data tab.';
+      return;
+    }
     errEl.textContent = '';
     btn.disabled = true;
-    btn.textContent = 'Creating…';
+    btn.textContent = 'Checking…';
     try {
-      const bucketId = await createKvdbBucket(email);
+      const res = await fetch(url + '/connectiontest.json', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(true)
+      });
+      if (!res.ok) throw new Error('Could not write to that database (HTTP ' + res.status + '). Double-check the Rules step above.');
       document.getElementById('setup-result').innerHTML = `
-        <div class="stub">
-          <div class="stub-main">
-            <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">Your bucket ID:</div>
-            <div class="mono" style="font-size:15px;background:var(--surface-3);padding:10px 12px;border-radius:8px;word-break:break-all;">${escapeHtml(bucketId)}</div>
-          </div>
-        </div>
-        <p class="hint" style="margin-top:14px;">
-          Copy that ID. In the HTML file, find the line<br/>
-          <span class="mono">const KVDB_BUCKET_ID = "REPLACE_ME";</span><br/>
-          and replace <span class="mono">REPLACE_ME</span> with the ID above. Save the file, re-upload it to GitHub (commit the change), and reload this page &mdash; the real exam app will load from then on for you and every student.
-        </p>
-        <p class="hint" style="margin-top:10px;">
-          Note: on the free plan, any record that goes 7 full days without being read or updated will quietly expire. That's fine for a normal exam window; just don't let a class go silent on this for over a week between attempts.
+        <p class="hint" style="color:var(--accent);">Connection works. In the HTML file, find the line<br/>
+          <span class="mono">const FIREBASE_DB_URL = "REPLACE_ME";</span><br/>
+          and replace <span class="mono">REPLACE_ME</span> with:<br/>
+          <span class="mono" style="display:block;background:var(--surface-3);padding:10px 12px;border-radius:8px;margin:8px 0;word-break:break-all;">${escapeHtml(url)}</span>
+          Save the file, re-upload it to GitHub (commit the change), and reload this page &mdash; the real exam app will load from then on for you and every student.
         </p>
       `;
       btn.style.display = 'none';
     } catch (e) {
-      errEl.textContent = e.message || 'Something went wrong creating the bucket. Try again.';
+      errEl.textContent = e.message || 'Something went wrong. Check the URL and the Rules step, then try again.';
       btn.disabled = false;
-      btn.textContent = 'Create storage bucket';
+      btn.textContent = 'Check connection';
     }
   };
 }
 
-function studentKey(roll){ return 'student:' + roll; }
-function examStateKey(roll){ return 'examstate:' + roll; }
-
 async function getStudentRecord(roll){
-  const raw = await storageGet(studentKey(roll));
-  if (!raw) return { roll, attempts: [] };
-  try { return JSON.parse(raw); } catch(e){ return { roll, attempts: [] }; }
+  const data = await fbGet('students/' + encodeURIComponent(roll));
+  if (!data) return { roll, attempts: [] };
+  return data;
 }
 async function saveStudentRecord(rec){
-  await storageSet(studentKey(rec.roll), JSON.stringify(rec));
+  await fbPut('students/' + encodeURIComponent(rec.roll), rec);
 }
 async function getExamState(roll){
-  const raw = await storageGet(examStateKey(roll));
-  if (!raw) return null;
-  try { return JSON.parse(raw); } catch(e){ return null; }
+  const data = await fbGet('examstates/' + encodeURIComponent(roll));
+  return data || null;
 }
 async function saveExamState(roll, exam){
-  await storageSet(examStateKey(roll), JSON.stringify(exam));
+  await fbPut('examstates/' + encodeURIComponent(roll), exam);
 }
 async function clearExamState(roll){
-  await storageDelete(examStateKey(roll));
+  await fbDelete('examstates/' + encodeURIComponent(roll));
+}
+async function listAllStudents(){
+  const data = await fbGet('students');
+  if (!data) return [];
+  return Object.values(data);
 }
 
 /* ===================== UTIL ===================== */
@@ -831,16 +820,7 @@ function renderAdminLogin(){
 }
 
 async function loadAdminData(){
-  const keys = await storageList('student:');
-  const records = [];
-  for (const k of keys) {
-    const raw = await storageGet(k);
-    if (!raw) continue;
-    try {
-      const rec = JSON.parse(raw);
-      records.push(rec);
-    } catch(e) {}
-  }
+  const records = await listAllStudents();
   records.sort((a,b) => (a.roll || '').localeCompare(b.roll || ''));
   state.adminData = records;
 }
@@ -960,7 +940,7 @@ function stopTimer(){
 }
 
 /* ===================== INIT ===================== */
-if (KVDB_BUCKET_ID === 'REPLACE_ME') {
+if (FIREBASE_DB_URL === 'REPLACE_ME') {
   state.screen = 'setup';
 }
 render();
