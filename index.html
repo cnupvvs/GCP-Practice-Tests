@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ACE Certification Practice Exam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E131A;
+  --surface:#171D27;
+  --surface-2:#1F2733;
+  --surface-3:#262F3D;
+  --border:#2B3444;
+  --border-soft:#232B38;
+  --text:#EDF1F6;
+  --text-muted:#93A0B4;
+  --text-faint:#5E6B80;
+  --accent:#33D6AC;
+  --accent-dim:#1E7A62;
+  --accent-ink:#04140F;
+  --warn:#F0A93E;
+  --danger:#EF5B5B;
+  --danger-dim:#3A1E20;
+  --radius:14px;
+  --radius-sm:8px;
+  --font-display:'Space Grotesk',system-ui,sans-serif;
+  --font-body:'Inter',system-ui,sans-serif;
+  --font-mono:'IBM Plex Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:
+    radial-gradient(1200px 600px at 15% -10%, rgba(51,214,172,0.08), transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, rgba(240,169,62,0.05), transparent 55%),
+    var(--ink);
+  color:var(--text);
+  font-family:var(--font-body);
+  min-height:100vh;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+#app{max-width:920px;margin:0 auto;padding:28px 20px 60px;min-height:100vh;display:flex;flex-direction:column;}
+.brandbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(145deg,var(--accent),var(--accent-dim));display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-weight:600;font-size:13px;color:var(--accent-ink);flex-shrink:0;}
+.brand-name{font-family:var(--font-display);font-weight:600;font-size:15px;letter-spacing:0.01em;}
+.brand-sub{font-family:var(--font-mono);font-size:11px;color:var(--text-faint);margin-top:1px;}
+.top-actions a, .top-actions button.linklike{
+  font-family:var(--font-mono);font-size:12px;color:var(--text-muted);background:none;border:none;cursor:pointer;
+  text-decoration:none;padding:6px 0;
+}
+.top-actions button.linklike:hover{color:var(--accent);}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border-soft);
+  border-radius:var(--radius);
+  padding:32px;
+}
+.screen{display:flex;flex-direction:column;gap:18px;flex:1;}
+.center-screen{flex:1;display:flex;align-items:center;justify-content:center;}
+.center-screen .card{max-width:480px;width:100%;}
+
+h1.hero{font-family:var(--font-display);font-size:clamp(28px,4vw,38px);font-weight:700;line-height:1.15;margin:0 0 6px;}
+p.lede{color:var(--text-muted);font-size:15px;margin:0 0 8px;max-width:56ch;}
+.eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--accent);margin-bottom:4px;}
+
+.stub{
+  display:flex;gap:0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface-2);
+}
+.stub-main{flex:1;padding:22px 24px;}
+.stub-tab{
+  width:150px;padding:22px 18px;background:var(--surface-3);border-left:1px dashed var(--border);
+  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:6px;
+}
+.stub-label{font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.08em;}
+.stub-value{font-family:var(--font-mono);font-size:15px;color:var(--text);font-weight:500;}
+
+.field{display:flex;flex-direction:column;gap:7px;}
+.field label{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;}
+.field input{
+  background:var(--surface-2);border:1px solid var(--border);color:var(--text);
+  font-family:var(--font-mono);font-size:16px;padding:13px 14px;border-radius:var(--radius-sm);
+  outline:none;transition:border-color .15s;
+}
+.field input:focus{border-color:var(--accent);}
+.field input::placeholder{color:var(--text-faint);}
+.hint{font-size:12.5px;color:var(--text-faint);}
+.error-text{font-size:12.5px;color:var(--danger);min-height:16px;}
+
+.btn{
+  font-family:var(--font-body);font-weight:600;font-size:14.5px;
+  padding:13px 20px;border-radius:var(--radius-sm);border:1px solid transparent;
+  cursor:pointer;transition:transform .08s ease, opacity .15s;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn:active{transform:scale(0.98);}
+.btn-primary{background:var(--accent);color:var(--accent-ink);}
+.btn-primary:hover{opacity:0.92;}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-ghost{background:transparent;color:var(--text);border-color:var(--border);}
+.btn-ghost:hover{border-color:var(--text-muted);}
+.btn-danger{background:var(--danger);color:#2A0A0A;}
+.btn-block{width:100%;}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;}
+
+.choice-tiles{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px;}
+.tile{
+  background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);
+  padding:22px 18px;cursor:pointer;text-align:left;transition:border-color .15s,background .15s;
+  font-family:var(--font-body);color:var(--text);
+}
+.tile:hover{border-color:var(--accent);background:var(--surface-3);}
+.tile .tile-icon{font-family:var(--font-mono);font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+.tile .tile-title{font-family:var(--font-display);font-weight:600;font-size:17px;margin-bottom:4px;}
+.tile .tile-desc{font-size:13px;color:var(--text-muted);}
+
+.badge{
+  font-family:var(--font-mono);font-size:11px;padding:3px 9px;border-radius:100px;
+  border:1px solid var(--border);color:var(--text-muted);display:inline-flex;align-items:center;gap:5px;
+}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--text-faint);}
+.badge.ok{color:var(--accent);border-color:var(--accent-dim);}
+.badge.ok .badge-dot{background:var(--accent);}
+.badge.warn{color:var(--warn);border-color:#5A4420;}
+.badge.warn .badge-dot{background:var(--warn);}
+
+.module-list{display:flex;flex-direction:column;gap:10px;margin:6px 0;}
+.module-row{
+  display:flex;align-items:center;justify-content:space-between;padding:12px 16px;
+  background:var(--surface-2);border:1px solid var(--border-soft);border-radius:var(--radius-sm);
+}
+.module-row .mname{font-size:13.5px;color:var(--text);}
+.module-row .mcount{font-family:var(--font-mono);font-size:12px;color:var(--accent);}
+
+/* Exam screen */
+.exam-header{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:14px 18px;background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius);
+  margin-bottom:16px;position:sticky;top:12px;z-index:5;
+}
+.exam-id{font-family:var(--font-mono);font-size:12px;color:var(--text-muted);}
+.exam-id b{color:var(--text);}
+.timer{
+  font-family:var(--font-mono);font-size:20px;font-weight:600;color:var(--text);
+  padding:6px 14px;border-radius:100px;border:1px solid var(--border);background:var(--surface-2);
+  letter-spacing:0.03em;
+}
+.timer.warn{color:var(--warn);border-color:#5A4420;}
+.timer.danger{color:var(--danger);border-color:#5A2323;animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.55;}}
+
+.progress-strip{display:flex;gap:3px;margin:2px 0 18px;}
+.progress-seg{flex:1;display:flex;gap:2px;}
+.progress-dot{flex:1;height:5px;border-radius:2px;background:var(--border);}
+.progress-dot.answered{background:var(--accent);}
+.progress-dot.current{background:var(--warn);}
+
+.module-tag{font-family:var(--font-mono);font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;}
+.qcounter{font-family:var(--font-mono);font-size:12px;color:var(--text-faint);margin-bottom:6px;}
+.qtext{font-family:var(--font-display);font-size:20px;font-weight:600;line-height:1.4;margin:0 0 22px;}
+
+.option{
+  display:flex;align-items:flex-start;gap:12px;padding:15px 16px;margin-bottom:10px;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);
+  cursor:pointer;transition:border-color .12s,background .12s;
+}
+.option:hover{border-color:var(--text-muted);}
+.option.selected{border-color:var(--accent);background:rgba(51,214,172,0.08);}
+.option .opt-letter{
+  font-family:var(--font-mono);font-size:12px;font-weight:600;color:var(--text-muted);
+  width:24px;height:24px;border-radius:50%;border:1px solid var(--border);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.option.selected .opt-letter{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);}
+.option .opt-text{font-size:14.5px;padding-top:2px;}
+
+.exam-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px;}
+.jumpgrid{display:grid;grid-template-columns:repeat(15,1fr);gap:5px;margin-top:20px;}
+.jumpgrid-wrap{margin-top:26px;padding-top:20px;border-top:1px solid var(--border-soft);}
+.jumpgrid-label{font-family:var(--font-mono);font-size:11px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;}
+.jbtn{
+  aspect-ratio:1;border-radius:5px;border:1px solid var(--border);background:var(--surface-2);
+  font-family:var(--font-mono);font-size:10px;color:var(--text-faint);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.jbtn.answered{background:rgba(51,214,172,0.16);border-color:var(--accent-dim);color:var(--accent);}
+.jbtn.current{border-color:var(--warn);color:var(--warn);}
+
+/* Result screen */
+.score-hero{text-align:center;padding:36px 20px;}
+.score-num{font-family:var(--font-display);font-size:64px;font-weight:700;line-height:1;}
+.score-den{font-family:var(--font-mono);font-size:16px;color:var(--text-muted);margin-top:6px;}
+.score-pct{font-family:var(--font-mono);font-size:13px;margin-top:12px;}
+.pass{color:var(--accent);}
+.fail{color:var(--danger);}
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px;}
+.stat-box{background:var(--surface-2);border:1px solid var(--border-soft);border-radius:var(--radius-sm);padding:14px 16px;}
+.stat-box .stat-label{font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint);text-transform:uppercase;letter-spacing:0.06em;}
+.stat-box .stat-value{font-family:var(--font-display);font-size:20px;font-weight:600;margin-top:4px;}
+
+/* Admin table */
+table.admin-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px;}
+table.admin-table th{
+  text-align:left;font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint);
+  text-transform:uppercase;letter-spacing:0.06em;padding:9px 10px;border-bottom:1px solid var(--border);
+}
+table.admin-table td{padding:11px 10px;border-bottom:1px solid var(--border-soft);color:var(--text);}
+table.admin-table tr:hover td{background:var(--surface-2);}
+.mono{font-family:var(--font-mono);}
+
+footer.foot{margin-top:auto;padding-top:36px;text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--text-faint);}
+
+@media (max-width:560px){
+  .stub{flex-direction:column;}
+  .stub-tab{width:auto;border-left:none;border-top:1px dashed var(--border);}
+  .choice-tiles{grid-template-columns:1fr;}
+  .jumpgrid{grid-template-columns:repeat(8,1fr);}
+  .result-grid{grid-template-columns:1fr;}
+  .card{padding:22px;}
+  #app{padding:18px 14px 40px;}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+
+const QUESTION_BANK = {"Billing, Resources & Projects": [{"id": "bil-1", "module": "Billing, Resources & Projects", "q": "Which sequence correctly represents the Google Cloud resource hierarchy from highest to lowest?", "opts": {"A": "Project → Folder → Organization → Resource", "B": "Organization → Folder → Project → Resource", "C": "Organization → Project → Folder → Resource", "D": "Billing Account → Organization → Project → Folder"}, "correct": "B"}, {"id": "bil-2", "module": "Billing, Resources & Projects", "q": "What is the fundamental operating and administrative unit in Google Cloud?", "opts": {"A": "Zone", "B": "Project", "C": "Billing account", "D": "Folder"}, "correct": "B"}, {"id": "bil-3", "module": "Billing, Resources & Projects", "q": "A company has separate Development, Testing and Production environments, each containing several projects. What is the best way to organize them?", "opts": {"A": "Put all resources in one project.", "B": "Create folders for Development, Testing and Production.", "C": "Create a separate organization for every project.", "D": "Create one billing account for every VM."}, "correct": "B"}, {"id": "bil-4", "module": "Billing, Resources & Projects", "q": "A company applies the Viewer role to a group at the Production folder level. What happens?", "opts": {"A": "The role applies only to the folder itself.", "B": "Projects under that folder inherit the applicable Viewer permissions.", "C": "The users become Owners of all projects.", "D": "The role is copied separately into every project and removed from the folder."}, "correct": "B"}, {"id": "bil-5", "module": "Billing, Resources & Projects", "q": "Which statement about folders is correct?", "opts": {"A": "Every project must belong to a folder.", "B": "Folders can contain projects and other folders.", "C": "Folders contain only billing accounts.", "D": "A folder cannot have an IAM policy."}, "correct": "B"}, {"id": "bil-6", "module": "Billing, Resources & Projects", "q": "What is the primary purpose of a Cloud Billing account?", "opts": {"A": "To provide user authentication", "B": "To determine who pays for linked project usage", "C": "To store application source code", "D": "To organize projects into departments"}, "correct": "B"}, {"id": "bil-7", "module": "Billing, Resources & Projects", "q": "How many Cloud Billing accounts can a Google Cloud project be linked to at one time?", "opts": {"A": "One", "B": "Two", "C": "Five", "D": "Unlimited"}, "correct": "A"}, {"id": "bil-8", "module": "Billing, Resources & Projects", "q": "One Cloud Billing account can be linked to:", "opts": {"A": "Only one project", "B": "One or more projects", "C": "Only projects in one folder", "D": "Only projects with the same project name"}, "correct": "B"}, {"id": "bil-9", "module": "Billing, Resources & Projects", "q": "A finance analyst needs to view costs across every project linked to a billing account but must not modify billing settings. Which type of role is most appropriate?", "opts": {"A": "Billing Account Viewer", "B": "Project Owner", "C": "Compute Admin", "D": "Billing Account Administrator"}, "correct": "A"}, {"id": "bil-10", "module": "Billing, Resources & Projects", "q": "A project administrator can create VMs but cannot link the project to a billing account. Why?", "opts": {"A": "Compute permissions and billing permissions are separate.", "B": "Only Google Support can link billing accounts.", "C": "Projects cannot use billing accounts.", "D": "The administrator must delete the project first."}, "correct": "A"}, {"id": "bil-11", "module": "Billing, Resources & Projects", "q": "A company creates a monthly budget of $5,000 with an alert at 80%. What happens when costs reach $4,000?", "opts": {"A": "All project resources automatically stop.", "B": "An alert can be triggered, but normal usage continues.", "C": "The billing account is deleted.", "D": "The project becomes read-only."}, "correct": "B"}, {"id": "bil-12", "module": "Billing, Resources & Projects", "q": "Which statement about standard Cloud Billing budgets is true?", "opts": {"A": "They automatically prevent all spending beyond the budget amount.", "B": "They are primarily used for monitoring and notifications.", "C": "They automatically delete expensive resources.", "D": "They replace project quotas."}, "correct": "B"}, {"id": "bil-13", "module": "Billing, Resources & Projects", "q": "A company wants to trigger an automated workflow when a billing threshold is reached. What should it configure?", "opts": {"A": "A budget with Pub/Sub notifications", "B": "A VPC firewall rule", "C": "A project label only", "D": "A custom machine type"}, "correct": "A"}, {"id": "bil-14", "module": "Billing, Resources & Projects", "q": "Why should you be cautious about automatically disabling billing when a budget is exceeded?", "opts": {"A": "It increases VM performance.", "B": "It can shut down services and may cause resources to be irretrievably deleted.", "C": "It automatically increases quotas.", "D": "It grants users additional IAM roles."}, "correct": "B"}, {"id": "bil-15", "module": "Billing, Resources & Projects", "q": "Which project identifier can be changed after a project is created?", "opts": {"A": "Project ID", "B": "Project number", "C": "Project display name", "D": "All three identifiers"}, "correct": "C"}, {"id": "bil-16", "module": "Billing, Resources & Projects", "q": "Which project identifier must be globally unique?", "opts": {"A": "Project display name", "B": "Project ID", "C": "Folder name", "D": "Resource label"}, "correct": "B"}, {"id": "bil-17", "module": "Billing, Resources & Projects", "q": "Which project identifier is automatically assigned by Google and is numeric?", "opts": {"A": "Project name", "B": "Project ID", "C": "Project number", "D": "Folder name"}, "correct": "C"}, {"id": "bil-18", "module": "Billing, Resources & Projects", "q": "Which command creates a new Google Cloud project?", "opts": {"A": "gcloud compute projects create PROJECT_ID", "B": "gcloud projects create PROJECT_ID", "C": "gcloud billing projects create PROJECT_ID", "D": "gcloud resource create-project PROJECT_ID"}, "correct": "B"}, {"id": "bil-19", "module": "Billing, Resources & Projects", "q": "An application receives an error indicating that a required Google Cloud API is disabled. What should the administrator do?", "opts": {"A": "Recreate the organization.", "B": "Enable the required API in the project.", "C": "Change the project display name.", "D": "Delete the billing account."}, "correct": "B"}, {"id": "bil-20", "module": "Billing, Resources & Projects", "q": "Which command enables the Compute Engine API?", "opts": {"A": "gcloud compute enable", "B": "gcloud services enable compute.googleapis.com", "C": "gcloud projects enable compute", "D": "gcloud api start compute"}, "correct": "B"}, {"id": "bil-21", "module": "Billing, Resources & Projects", "q": "What is the main purpose of Google Cloud quotas?", "opts": {"A": "To replace IAM roles", "B": "To restrict resource consumption and API usage", "C": "To rename projects automatically", "D": "To calculate employee salaries"}, "correct": "B"}, {"id": "bil-22", "module": "Billing, Resources & Projects", "q": "An application is expected to grow significantly next month and may exceed its Compute Engine CPU quota. What should the administrator do?", "opts": {"A": "Wait until the quota is exceeded.", "B": "Request a quota increase in advance.", "C": "Create a budget instead.", "D": "Rename the project."}, "correct": "B"}, {"id": "bil-23", "module": "Billing, Resources & Projects", "q": "Which statement correctly distinguishes a quota from a budget?", "opts": {"A": "A budget restricts API requests, while a quota sends cost alerts.", "B": "A quota controls resource or API usage; a budget tracks spending.", "C": "Both always stop spending immediately.", "D": "There is no difference."}, "correct": "B"}, {"id": "bil-24", "module": "Billing, Resources & Projects", "q": "A company wants to identify costs belonging to different departments within the same project. Which feature is most useful?", "opts": {"A": "Labels", "B": "Zones", "C": "Firewall rules", "D": "Snapshots"}, "correct": "A"}, {"id": "bil-25", "module": "Billing, Resources & Projects", "q": "A company wants centralized governance while allowing each department to maintain separate projects. Which architecture is best?", "opts": {"A": "One unrelated project for every individual user", "B": "Organization → Department folders → Projects", "C": "One billing account acting as the resource hierarchy root", "D": "Separate public resources without projects"}, "correct": "B"}], "Compute Engine & VMs": [{"id": "com-1", "module": "Compute Engine & VMs", "q": "What is Google Compute Engine?", "opts": {"A": "A managed relational database service", "B": "An Infrastructure as a Service offering for running virtual machines", "C": "An object-storage service", "D": "A serverless function platform"}, "correct": "B"}, {"id": "com-2", "module": "Compute Engine & VMs", "q": "Which Compute Engine resource determines the number of virtual CPUs and amount of memory available to a VM?", "opts": {"A": "Machine type", "B": "Disk snapshot", "C": "Firewall rule", "D": "Instance label"}, "correct": "A"}, {"id": "com-3", "module": "Compute Engine & VMs", "q": "A small web application has unpredictable but generally low CPU usage. The company wants an economical general-purpose VM. Which machine family is commonly suitable?", "opts": {"A": "E2", "B": "Memory-optimized", "C": "Accelerator-optimized", "D": "Sole-tenant only"}, "correct": "A"}, {"id": "com-4", "module": "Compute Engine & VMs", "q": "A database requires 700 GB of memory and relatively fewer CPUs compared with its memory requirement. Which machine category should you consider?", "opts": {"A": "Shared-core machine type", "B": "Memory-optimized machine type", "C": "Compute-optimized machine type", "D": "Spot E2 micro VM"}, "correct": "B"}, {"id": "com-5", "module": "Compute Engine & VMs", "q": "A scientific application performs CPU-intensive calculations and requires high per-core performance. Which type of machine family is most suitable?", "opts": {"A": "Compute-optimized", "B": "Memory-optimized", "C": "Shared-core", "D": "Storage-only"}, "correct": "A"}, {"id": "com-6", "module": "Compute Engine & VMs", "q": "A team needs a VM with a nonstandard combination of vCPUs and memory. What should the team use?", "opts": {"A": "A custom machine type", "B": "A Cloud Storage lifecycle rule", "C": "A fixed snapshot", "D": "A firewall target tag"}, "correct": "A"}, {"id": "com-7", "module": "Compute Engine & VMs", "q": "An administrator wants to change the machine type of an existing VM. What is normally required first?", "opts": {"A": "Delete its project.", "B": "Stop the VM.", "C": "Delete its boot disk.", "D": "Convert the VM to a managed instance group."}, "correct": "B"}, {"id": "com-8", "module": "Compute Engine & VMs", "q": "Which command creates a basic Compute Engine VM?", "opts": {"A": "gcloud compute instances create web-vm --zone=us-central1-a", "B": "gcloud vm create web-vm", "C": "gcloud projects create-instance web-vm", "D": "gcloud storage instances create web-vm"}, "correct": "A"}, {"id": "com-9", "module": "Compute Engine & VMs", "q": "Which command lists VM instances in a project?", "opts": {"A": "gcloud compute instances list", "B": "gcloud compute disks list-vms", "C": "gcloud services list-instances", "D": "gcloud projects instances show"}, "correct": "A"}, {"id": "com-10", "module": "Compute Engine & VMs", "q": "Which command connects to a Linux Compute Engine VM using SSH?", "opts": {"A": "gcloud compute ssh VM_NAME --zone=ZONE", "B": "gcloud compute connect VM_NAME", "C": "gcloud ssh projects/VM_NAME", "D": "gcloud network ssh VM_NAME"}, "correct": "A"}, {"id": "com-11", "module": "Compute Engine & VMs", "q": "What is the boot disk of a Compute Engine VM primarily used for?", "opts": {"A": "Storing the operating system", "B": "Creating VPC firewall rules", "C": "Assigning IAM roles", "D": "Managing the billing account"}, "correct": "A"}, {"id": "com-12", "module": "Compute Engine & VMs", "q": "Which statement correctly describes Persistent Disk?", "opts": {"A": "It is physically located inside the VM host and always disappears when the VM stops.", "B": "It is durable, network-attached block storage.", "C": "It can only be used by Cloud Storage buckets.", "D": "It is an object-storage service."}, "correct": "B"}, {"id": "com-13", "module": "Compute Engine & VMs", "q": "An application requires very high temporary disk performance. The data can be recreated if the VM stops unexpectedly. Which storage option is most suitable?", "opts": {"A": "Local SSD", "B": "Standard Persistent Disk only", "C": "Cloud Storage Archive", "D": "Disk snapshot"}, "correct": "A"}, {"id": "com-14", "module": "Compute Engine & VMs", "q": "A company stores critical database data on a Local SSD. What is the main problem with this design?", "opts": {"A": "Local SSD cannot provide high performance.", "B": "Local SSD data is ephemeral and should not be the only copy of critical data.", "C": "Local SSD is object storage.", "D": "Local SSD can only be used with Cloud Functions."}, "correct": "B"}, {"id": "com-15", "module": "Compute Engine & VMs", "q": "A Persistent Disk is running out of capacity. What can the administrator normally do?", "opts": {"A": "Increase the disk size.", "B": "Rename the project.", "C": "Convert the disk into a VPC.", "D": "Decrease the disk size without migration."}, "correct": "A"}, {"id": "com-16", "module": "Compute Engine & VMs", "q": "Which Compute Engine feature creates an incremental, point-in-time backup of a Persistent Disk or Hyperdisk?", "opts": {"A": "Snapshot", "B": "Firewall rule", "C": "Instance tag", "D": "Startup script"}, "correct": "A"}, {"id": "com-17", "module": "Compute Engine & VMs", "q": "A company wants automatic nightly backups of a VM’s data disk. What should it configure?", "opts": {"A": "A snapshot schedule", "B": "A firewall schedule", "C": "An instance label", "D": "A startup script that deletes the disk"}, "correct": "A"}, {"id": "com-18", "module": "Compute Engine & VMs", "q": "Which statement about Compute Engine snapshots is correct?", "opts": {"A": "Every snapshot is always a completely separate full copy.", "B": "Standard snapshots are incremental.", "C": "Snapshots can back up Local SSD data.", "D": "A snapshot is the same as a firewall rule."}, "correct": "B"}, {"id": "com-19", "module": "Compute Engine & VMs", "q": "What is the main purpose of a custom image?", "opts": {"A": "To create new VM boot disks with a reusable operating-system configuration", "B": "To distribute incoming network traffic", "C": "To provide temporary external IP addresses", "D": "To manage IAM groups"}, "correct": "A"}, {"id": "com-20", "module": "Compute Engine & VMs", "q": "A company wants to back up a VM’s disks and much of its instance configuration as one resource. Which option is most appropriate?", "opts": {"A": "Machine image", "B": "Firewall rule", "C": "Sole-tenant node", "D": "Static route"}, "correct": "A"}, {"id": "com-21", "module": "Compute Engine & VMs", "q": "What is an instance template?", "opts": {"A": "A reusable specification for creating VM instances", "B": "A backup of a Cloud Storage object", "C": "An IAM custom role", "D": "A network packet capture"}, "correct": "A"}, {"id": "com-22", "module": "Compute Engine & VMs", "q": "Can you directly edit an existing instance template?", "opts": {"A": "Yes, every field can be edited.", "B": "No; create a new template when configuration changes are required.", "C": "Only the machine type can be edited.", "D": "Only the template name can be edited."}, "correct": "B"}, {"id": "com-23", "module": "Compute Engine & VMs", "q": "What is the primary advantage of a managed instance group?", "opts": {"A": "It manages a collection of similar VMs and supports features such as autoscaling and autohealing.", "B": "It stores objects in buckets.", "C": "It provides a relational database.", "D": "It replaces Cloud IAM."}, "correct": "A"}, {"id": "com-24", "module": "Compute Engine & VMs", "q": "What is the difference between a managed and unmanaged instance group?", "opts": {"A": "A managed group can create and maintain similar VMs automatically; an unmanaged group contains VMs administered individually.", "B": "An unmanaged group always supports autoscaling.", "C": "A managed group cannot use a load balancer.", "D": "There is no difference."}, "correct": "A"}, {"id": "com-25", "module": "Compute Engine & VMs", "q": "A web application experiences varying traffic throughout the day. The company wants the number of VM instances to increase and decrease automatically. Which feature should it use?", "opts": {"A": "MIG autoscaling", "B": "Object Lifecycle Management", "C": "Disk cloning", "D": "Cloud KMS rotation"}, "correct": "A"}, {"id": "com-26", "module": "Compute Engine & VMs", "q": "A company wants unhealthy VMs in a managed instance group to be automatically recreated. What should it configure?", "opts": {"A": "A health check and autohealing policy", "B": "A snapshot only", "C": "A static external IP", "D": "An object hold"}, "correct": "A"}, {"id": "com-27", "module": "Compute Engine & VMs", "q": "A service must remain available even if one zone fails. Which architecture is best?", "opts": {"A": "A regional managed instance group distributed across multiple zones", "B": "One VM in one zone", "C": "One Local SSD only", "D": "One unmanaged VM with an ephemeral IP"}, "correct": "A"}, {"id": "com-28", "module": "Compute Engine & VMs", "q": "A batch-processing workload can tolerate interruption and restart. The company wants lower compute cost. Which VM provisioning model is appropriate?", "opts": {"A": "Spot VM", "B": "Sole-tenant VM only", "C": "Standard VM with static IP", "D": "Confidential VM only"}, "correct": "A"}, {"id": "com-29", "module": "Compute Engine & VMs", "q": "Which workload is least suitable for Spot VMs?", "opts": {"A": "Restartable batch processing", "B": "Stateless rendering workers", "C": "A single critical database that cannot tolerate interruption", "D": "Distributed fault-tolerant analytics"}, "correct": "C"}, {"id": "com-30", "module": "Compute Engine & VMs", "q": "A system administrator wants to install a web server automatically every time a Linux VM boots. Which feature should be used?", "opts": {"A": "Startup script", "B": "Disk snapshot", "C": "Firewall priority", "D": "Static route"}, "correct": "A"}, {"id": "com-31", "module": "Compute Engine & VMs", "q": "Where are startup scripts commonly configured for a Compute Engine VM?", "opts": {"A": "VM metadata", "B": "Cloud Billing account", "C": "VPC route priority only", "D": "IAM custom-role title"}, "correct": "A"}, {"id": "com-32", "module": "Compute Engine & VMs", "q": "An application on a VM needs to access a Cloud Storage bucket securely. What is the recommended authentication method?", "opts": {"A": "Store a user password in the application source code.", "B": "Attach a service account to the VM and grant it an appropriate IAM role.", "C": "Make the bucket public.", "D": "Download and share an Owner account’s private key."}, "correct": "B"}, {"id": "com-33", "module": "Compute Engine & VMs", "q": "What is the current recommended approach for Compute Engine access scopes?", "opts": {"A": "Use the cloud-platform scope and control actual access with IAM roles.", "B": "Grant Owner to the VM service account.", "C": "Disable the service account and use passwords.", "D": "Use access scopes instead of IAM."}, "correct": "A"}, {"id": "com-34", "module": "Compute Engine & VMs", "q": "A user has Compute Instance Admin but cannot create a VM that runs as a particular service account. Which additional role may be required?", "opts": {"A": "Service Account User on the service account", "B": "Storage Object Viewer", "C": "Billing Account Viewer", "D": "Organization Viewer"}, "correct": "A"}, {"id": "com-35", "module": "Compute Engine & VMs", "q": "A VM receives an external IP address automatically. What type is it normally?", "opts": {"A": "Ephemeral external IP", "B": "Permanent internal IP", "C": "Cloud Storage IP", "D": "Organization-wide static IP"}, "correct": "A"}, {"id": "com-36", "module": "Compute Engine & VMs", "q": "A public web server must keep the same external IPv4 address after being stopped and restarted. What should the administrator use?", "opts": {"A": "A static external IP address", "B": "An ephemeral external IP", "C": "A random internal IP", "D": "A Cloud Storage signed URL"}, "correct": "A"}, {"id": "com-37", "module": "Compute Engine & VMs", "q": "What does Compute Engine live migration do during supported host maintenance?", "opts": {"A": "It moves a running VM to another host in the same zone with minimal interruption.", "B": "It copies the VM to another cloud provider.", "C": "It permanently changes the VM’s region.", "D": "It converts the VM into a container."}, "correct": "A"}, {"id": "com-38", "module": "Compute Engine & VMs", "q": "A workload must run on physical hardware dedicated to the organization’s VMs. Which Compute Engine option should be used?", "opts": {"A": "Sole-tenant nodes", "B": "Shared-core VMs", "C": "Spot VMs", "D": "Cloud Storage Nearline"}, "correct": "A"}, {"id": "com-39", "module": "Compute Engine & VMs", "q": "A machine-learning training workload requires NVIDIA GPUs. What should the administrator verify before creating the VM?", "opts": {"A": "GPU availability in the selected zone and sufficient GPU quota", "B": "Cloud Storage bucket naming only", "C": "That the VM has no service account", "D": "That the project has no VPC"}, "correct": "A"}, {"id": "com-40", "module": "Compute Engine & VMs", "q": "A company processes highly sensitive data and wants memory contents encrypted while the VM is actively running. Which Compute Engine feature is appropriate?", "opts": {"A": "Confidential VM", "B": "Standard disk snapshot", "C": "Ephemeral IP", "D": "Unmanaged instance group"}, "correct": "A"}], "Google Cloud Storage": [{"id": "goo-1", "module": "Google Cloud Storage", "q": "Which Google Cloud Storage class is designed for data accessed frequently?", "opts": {"A": "Archive", "B": "Coldline", "C": "Nearline", "D": "Standard"}, "correct": "D"}, {"id": "goo-2", "module": "Google Cloud Storage", "q": "Which storage class is best for backups accessed approximately once every month?", "opts": {"A": "Standard", "B": "Nearline", "C": "Coldline", "D": "Archive"}, "correct": "B"}, {"id": "goo-3", "module": "Google Cloud Storage", "q": "Which storage class is optimized for data accessed approximately once every 90 days?", "opts": {"A": "Standard", "B": "Nearline", "C": "Coldline", "D": "Archive"}, "correct": "C"}, {"id": "goo-4", "module": "Google Cloud Storage", "q": "Which storage class generally has the lowest at-rest storage price for long-term archival data?", "opts": {"A": "Standard", "B": "Nearline", "C": "Coldline", "D": "Archive"}, "correct": "D"}, {"id": "goo-5", "module": "Google Cloud Storage", "q": "What is the basic unit of data stored in Cloud Storage?", "opts": {"A": "Bucket", "B": "Folder", "C": "Object", "D": "Project"}, "correct": "C"}, {"id": "goo-6", "module": "Google Cloud Storage", "q": "A Cloud Storage bucket name must be:", "opts": {"A": "Unique only within a project", "B": "Unique only within an organization", "C": "Globally unique", "D": "Unique only within a region"}, "correct": "C"}, {"id": "goo-7", "module": "Google Cloud Storage", "q": "Can you rename an existing Cloud Storage bucket?", "opts": {"A": "Yes", "B": "Only through the console", "C": "Only with the CLI", "D": "No"}, "correct": "D"}, {"id": "goo-8", "module": "Google Cloud Storage", "q": "Which bucket location is commonly used when data must be available across a broad geographical area containing multiple regions?", "opts": {"A": "Zone", "B": "Region", "C": "Dual-region", "D": "Multi-region"}, "correct": "D"}, {"id": "goo-9", "module": "Google Cloud Storage", "q": "Which bucket location generally provides low latency for an application running entirely in one Google Cloud region?", "opts": {"A": "Region", "B": "Multi-region", "C": "Archive", "D": "Dual-region"}, "correct": "A"}, {"id": "goo-10", "module": "Google Cloud Storage", "q": "What is a Cloud Storage bucket?", "opts": {"A": "A virtual machine", "B": "A container for objects", "C": "A relational database", "D": "A billing account"}, "correct": "B"}, {"id": "goo-11", "module": "Google Cloud Storage", "q": "Which feature can automatically delete objects after a specified age?", "opts": {"A": "Object Versioning", "B": "Object Lifecycle Management", "C": "Bucket Lock", "D": "Signed URL"}, "correct": "B"}, {"id": "goo-12", "module": "Google Cloud Storage", "q": "Object Versioning primarily helps recover:", "opts": {"A": "Deleted or overwritten object versions", "B": "Deleted Google Cloud projects", "C": "Deleted virtual machines", "D": "Closed billing accounts"}, "correct": "A"}, {"id": "goo-13", "module": "Google Cloud Storage", "q": "Uniform Bucket-Level Access disables:", "opts": {"A": "IAM", "B": "Bucket and object ACLs", "C": "Object Versioning", "D": "Encryption"}, "correct": "B"}, {"id": "goo-14", "module": "Google Cloud Storage", "q": "Which access-management system is generally recommended for Cloud Storage enterprise administration?", "opts": {"A": "Per-object ACLs", "B": "IAM", "C": "Shared passwords", "D": "Anonymous public access"}, "correct": "B"}, {"id": "goo-15", "module": "Google Cloud Storage", "q": "A signed URL provides:", "opts": {"A": "Permanent public access", "B": "Time-limited access to a specific resource", "C": "Permission to delete the bucket", "D": "Automatic object encryption"}, "correct": "B"}, {"id": "goo-16", "module": "Google Cloud Storage", "q": "Which type of encryption protects Cloud Storage data by default?", "opts": {"A": "Customer-managed encryption only", "B": "Google-managed encryption", "C": "Client-side encryption only", "D": "Password-based encryption"}, "correct": "B"}, {"id": "goo-17", "module": "Google Cloud Storage", "q": "Customer-managed encryption keys used by Cloud Storage are managed through:", "opts": {"A": "Compute Engine", "B": "Cloud Key Management Service", "C": "BigQuery", "D": "IAM Conditions"}, "correct": "B"}, {"id": "goo-18", "module": "Google Cloud Storage", "q": "What happens when Object Versioning is enabled and a live object is overwritten?", "opts": {"A": "The old object is always permanently deleted.", "B": "The previous generation becomes noncurrent.", "C": "The bucket is deleted.", "D": "The upload is rejected."}, "correct": "B"}, {"id": "goo-19", "module": "Google Cloud Storage", "q": "Which managed service can transfer large datasets into Cloud Storage?", "opts": {"A": "Cloud Run", "B": "Storage Transfer Service", "C": "Pub/Sub", "D": "Cloud SQL"}, "correct": "B"}, {"id": "goo-20", "module": "Google Cloud Storage", "q": "What is the primary purpose of Storage Transfer Service?", "opts": {"A": "Encrypt buckets", "B": "Transfer data between supported storage systems", "C": "Create IAM users", "D": "Create Google Cloud projects"}, "correct": "B"}, {"id": "goo-21", "module": "Google Cloud Storage", "q": "Which traditional storage class generally has the highest at-rest storage price?", "opts": {"A": "Standard", "B": "Nearline", "C": "Coldline", "D": "Archive"}, "correct": "A"}, {"id": "goo-22", "module": "Google Cloud Storage", "q": "Which traditional storage class generally has the lowest at-rest storage price?", "opts": {"A": "Standard", "B": "Nearline", "C": "Coldline", "D": "Archive"}, "correct": "D"}, {"id": "goo-23", "module": "Google Cloud Storage", "q": "Which feature prevents objects from being deleted or replaced until they satisfy a required retention period?", "opts": {"A": "Lifecycle rules", "B": "Retention policy", "C": "Labels", "D": "Signed URLs"}, "correct": "B"}, {"id": "goo-24", "module": "Google Cloud Storage", "q": "What is an object hold?", "opts": {"A": "A mechanism that prevents an object from being deleted or replaced while the hold is active", "B": "A mechanism that encrypts the object", "C": "A compression feature", "D": "A transfer operation"}, "correct": "A"}, {"id": "goo-25", "module": "Google Cloud Storage", "q": "Which access mechanism is generally preferred for centralized enterprise environments?", "opts": {"A": "Individual object ACLs", "B": "Bucket ACLs", "C": "IAM", "D": "Public access"}, "correct": "C"}, {"id": "goo-26", "module": "Google Cloud Storage", "q": "A sensitive bucket is accidentally made publicly accessible. Which security principle has been violated?", "opts": {"A": "High availability", "B": "Least privilege", "C": "Elasticity", "D": "Fault tolerance"}, "correct": "B"}, {"id": "goo-27", "module": "Google Cloud Storage", "q": "Cloud Storage is primarily an example of:", "opts": {"A": "Block storage", "B": "Network file storage", "C": "Object storage", "D": "Relational database storage"}, "correct": "C"}, {"id": "goo-28", "module": "Google Cloud Storage", "q": "Which feature can automatically move objects from Standard to Archive after one year?", "opts": {"A": "IAM", "B": "Lifecycle Management", "C": "Object Versioning", "D": "ACLs"}, "correct": "B"}, {"id": "goo-29", "module": "Google Cloud Storage", "q": "When Object Versioning is enabled, deleting a live object generally causes:", "opts": {"A": "Immediate permanent deletion of every generation", "B": "The deleted live generation to be preserved as a noncurrent version", "C": "The bucket to be deleted", "D": "The bucket IAM policy to be removed"}, "correct": "B"}, {"id": "goo-30", "module": "Google Cloud Storage", "q": "What is the maximum size of a single Cloud Storage object?", "opts": {"A": "5 TiB", "B": "10 TiB", "C": "Unlimited", "D": "100 GiB"}, "correct": "A"}, {"id": "goo-31", "module": "Google Cloud Storage", "q": "Which service manages customer-managed encryption keys for Cloud Storage?", "opts": {"A": "Secret Manager", "B": "Cloud KMS", "C": "IAM", "D": "Compute Engine"}, "correct": "B"}, {"id": "goo-32", "module": "Google Cloud Storage", "q": "Which feature combination is best when compliance requires an immutable bucket-wide retention period?", "opts": {"A": "Object Versioning only", "B": "Retention policy with Bucket Lock", "C": "Signed URL", "D": "Labels"}, "correct": "B"}, {"id": "goo-33", "module": "Google Cloud Storage", "q": "Which location type is commonly suitable for serving data across users distributed throughout a broad geographical area?", "opts": {"A": "Regional", "B": "Multi-region", "C": "Zonal persistent disk", "D": "Local SSD"}, "correct": "B"}, {"id": "goo-34", "module": "Google Cloud Storage", "q": "Which feature provides temporary access to a private object without granting the recipient an IAM role?", "opts": {"A": "ACL", "B": "Signed URL", "C": "Lifecycle rule", "D": "Bucket Lock"}, "correct": "B"}, {"id": "goo-35", "module": "Google Cloud Storage", "q": "Which combination most closely follows Cloud Storage security and management best practices?", "opts": {"A": "Public buckets and object ACLs everywhere", "B": "IAM, Uniform Bucket-Level Access, lifecycle policies, and CMEK when required", "C": "Shared passwords", "D": "Disabled encryption"}, "correct": "B"}], "IAM": [{"id": "iam-1", "module": "IAM", "q": "A developer needs to create, start, stop, and delete Compute Engine virtual machines but should not have permission to manage Cloud SQL databases. Which IAM role should you assign?", "opts": {"A": "Viewer", "B": "Editor", "C": "Compute Admin", "D": "Cloud SQL Admin"}, "correct": "C"}, {"id": "iam-2", "module": "IAM", "q": "A company wants every developer to have the same permissions. New developers join every month. What is the best approach?", "opts": {"A": "Assign roles individually", "B": "Make every developer an Owner", "C": "Create a Google Group and assign the role to the group", "D": "Share the administrator account"}, "correct": "C"}, {"id": "iam-3", "module": "IAM", "q": "What is the main purpose of a Service Account?", "opts": {"A": "Store backups", "B": "Authenticate applications and workloads", "C": "Replace Compute Engine", "D": "Encrypt storage buckets"}, "correct": "B"}, {"id": "iam-4", "module": "IAM", "q": "Which IAM role provides read-only access?", "opts": {"A": "Viewer", "B": "Owner", "C": "Editor", "D": "Compute Admin"}, "correct": "A"}, {"id": "iam-5", "module": "IAM", "q": "What does Authentication verify?", "opts": {"A": "What resources can be deleted", "B": "User identity", "C": "Billing account", "D": "VM status"}, "correct": "B"}, {"id": "iam-6", "module": "IAM", "q": "A VM must upload files to Cloud Storage. Which solution follows Google Cloud security best practices?", "opts": {"A": "Save the administrator password inside the VM", "B": "Store API keys in application code", "C": "Attach a Service Account with Storage permissions", "D": "Make the bucket public"}, "correct": "C"}, {"id": "iam-7", "module": "IAM", "q": "Which statement about IAM permissions is TRUE?", "opts": {"A": "Permissions are assigned directly to users only.", "B": "Permissions are grouped into Roles.", "C": "Roles are grouped into Permissions.", "D": "Permissions cannot be inherited."}, "correct": "B"}, {"id": "iam-8", "module": "IAM", "q": "Where should you assign a role if every project inside the Engineering department needs the same permissions?", "opts": {"A": "VM", "B": "Organization", "C": "Folder", "D": "Bucket"}, "correct": "C"}, {"id": "iam-9", "module": "IAM", "q": "Which principle recommends giving users only the permissions they actually need?", "opts": {"A": "Shared Responsibility", "B": "Zero Downtime", "C": "Principle of Least Privilege", "D": "Disaster Recovery"}, "correct": "C"}, {"id": "iam-10", "module": "IAM", "q": "A company wants users to manage only Cloud SQL databases. Which role is most appropriate?", "opts": {"A": "Viewer", "B": "Editor", "C": "Cloud SQL Admin", "D": "Owner"}, "correct": "C"}, {"id": "iam-11", "module": "IAM", "q": "Which is considered a Principal in IAM?", "opts": {"A": "Compute Engine", "B": "Google Account", "C": "Bucket", "D": "Snapshot"}, "correct": "B"}, {"id": "iam-12", "module": "IAM", "q": "Which role type is recommended for most production workloads?", "opts": {"A": "Basic Roles", "B": "Predefined Roles", "C": "Owner", "D": "Editor"}, "correct": "B"}, {"id": "iam-13", "module": "IAM", "q": "Which statement about Service Accounts is FALSE?", "opts": {"A": "They represent applications.", "B": "They can have IAM roles.", "C": "They are used by workloads.", "D": "They replace Billing Accounts."}, "correct": "D"}, {"id": "iam-14", "module": "IAM", "q": "Permissions assigned at the Organization level are inherited by:", "opts": {"A": "Projects only", "B": "Folders only", "C": "All child resources", "D": "Nothing"}, "correct": "C"}, {"id": "iam-15", "module": "IAM", "q": "Which role allows users to modify IAM policies?", "opts": {"A": "Viewer", "B": "Owner", "C": "Storage Admin", "D": "Compute Viewer"}, "correct": "B"}, {"id": "iam-16", "module": "IAM", "q": "Which is the smallest unit in IAM?", "opts": {"A": "Project", "B": "Folder", "C": "Permission", "D": "Role"}, "correct": "C"}, {"id": "iam-17", "module": "IAM", "q": "A company wants applications to authenticate without storing passwords. What should they use?", "opts": {"A": "IAM Viewer", "B": "Service Account", "C": "Google Group", "D": "Cloud SQL"}, "correct": "B"}, {"id": "iam-18", "module": "IAM", "q": "A company assigns the Viewer role at the Organization level. What happens?", "opts": {"A": "Users can view every project under the organization.", "B": "Users become Owners.", "C": "Users can delete VMs.", "D": "Users can change billing."}, "correct": "A"}, {"id": "iam-19", "module": "IAM", "q": "Which role type can you design yourself?", "opts": {"A": "Viewer", "B": "Editor", "C": "Custom Role", "D": "Owner"}, "correct": "C"}, {"id": "iam-20", "module": "IAM", "q": "A company has 500 employees. Which IAM management strategy is best?", "opts": {"A": "Assign roles individually", "B": "Use Google Groups", "C": "Make everyone Owner", "D": "Share administrator credentials"}, "correct": "B"}, {"id": "iam-21", "module": "IAM", "q": "A developer needs to restart Compute Engine VM instances but should not be able to create, delete, or modify them. What is the BEST solution?", "opts": {"A": "Assign the Compute Admin role", "B": "Assign the Editor role", "C": "Create a Custom Role with only start, stop, and reset permissions", "D": "Assign the Owner role"}, "correct": "C"}, {"id": "iam-22", "module": "IAM", "q": "A Compute Engine VM needs to read files from a Cloud Storage bucket. Which authentication method is recommended?", "opts": {"A": "Store a Google account password on the VM", "B": "Store a JSON API key inside the application", "C": "Attach a Service Account with Storage Object Viewer permissions", "D": "Make the bucket public"}, "correct": "C"}, {"id": "iam-23", "module": "IAM", "q": "Your company has: Development Testing Production Each environment has multiple projects. Where should IAM roles be assigned?", "opts": {"A": "Every VM individually", "B": "Every bucket individually", "C": "Environment Folder", "D": "Each user account separately"}, "correct": "C"}, {"id": "iam-24", "module": "IAM", "q": "A new intern should only be able to view Compute Engine instances. Which predefined role should you assign?", "opts": {"A": "Compute Admin", "B": "Compute Viewer", "C": "Editor", "D": "Owner"}, "correct": "B"}, {"id": "iam-25", "module": "IAM", "q": "Which statement about IAM inheritance is TRUE?", "opts": {"A": "Permissions flow upward.", "B": "Permissions are inherited from parent resources.", "C": "Every resource requires its own IAM policy.", "D": "Projects inherit from VMs."}, "correct": "B"}, {"id": "iam-26", "module": "IAM", "q": "Your application running in Cloud Run must access Cloud SQL. Which identity should Cloud Run use?", "opts": {"A": "Developer's Gmail account", "B": "Owner role", "C": "Service Account", "D": "Billing Account"}, "correct": "C"}, {"id": "iam-27", "module": "IAM", "q": "A company has 2,000 employees. The HR department hires new employees every week. How should IAM be managed?", "opts": {"A": "Assign roles individually.", "B": "Use Google Groups.", "C": "Make everyone Editor.", "D": "Share administrator credentials."}, "correct": "B"}, {"id": "iam-28", "module": "IAM", "q": "Which statement about Basic Roles is TRUE?", "opts": {"A": "They are recommended for production.", "B": "They provide broad permissions across services.", "C": "They only work for Compute Engine.", "D": "They cannot modify resources."}, "correct": "B"}, {"id": "iam-29", "module": "IAM", "q": "Which identity represents an application instead of a human?", "opts": {"A": "Google Group", "B": "Service Account", "C": "Folder", "D": "Project"}, "correct": "B"}, {"id": "iam-30", "module": "IAM", "q": "Which is the BEST example of the Principle of Least Privilege?", "opts": {"A": "Everyone gets Owner.", "B": "Everyone gets Editor.", "C": "Grant only the permissions needed for the job.", "D": "Make all buckets public."}, "correct": "C"}, {"id": "iam-31", "module": "IAM", "q": "A VM uses a Service Account. Later, the Service Account receives the Storage Object Admin role. What happens?", "opts": {"A": "The VM immediately gains those permissions (subject to credential refresh).", "B": "The VM must be recreated.", "C": "The operating system changes.", "D": "The disk is reformatted."}, "correct": "A"}, {"id": "iam-32", "module": "IAM", "q": "What is the main benefit of Predefined Roles?", "opts": {"A": "They are created by customers.", "B": "They grant every permission.", "C": "They are service-specific and maintained by Google.", "D": "They cannot be updated."}, "correct": "C"}, {"id": "iam-33", "module": "IAM", "q": "A company accidentally gives every employee the Owner role. Which security principle has been violated?", "opts": {"A": "High Availability", "B": "Fault Tolerance", "C": "Principle of Least Privilege", "D": "Elasticity"}, "correct": "C"}, {"id": "iam-34", "module": "IAM", "q": "You want an application to authenticate securely without passwords. What should you configure?", "opts": {"A": "IAM Viewer", "B": "Service Account", "C": "Bucket Labels", "D": "Project Name"}, "correct": "B"}, {"id": "iam-35", "module": "IAM", "q": "Permissions are assigned to users through:", "opts": {"A": "Buckets", "B": "Roles", "C": "Projects", "D": "Snapshots"}, "correct": "B"}, {"id": "iam-36", "module": "IAM", "q": "A Finance Manager should only view billing reports. Which role is the best fit?", "opts": {"A": "Owner", "B": "Editor", "C": "Billing Account Viewer (or another billing-specific read-only role)", "D": "Compute Admin"}, "correct": "C"}, {"id": "iam-37", "module": "IAM", "q": "What is the biggest advantage of assigning roles to Google Groups?", "opts": {"A": "Better VM performance", "B": "Easier permission management", "C": "Faster networking", "D": "Lower storage costs"}, "correct": "B"}, {"id": "iam-38", "module": "IAM", "q": "Which IAM component defines what actions are allowed?", "opts": {"A": "Principal", "B": "Role", "C": "Folder", "D": "Region"}, "correct": "B"}, {"id": "iam-39", "module": "IAM", "q": "An organization wants to control access to all projects from one place. Where should IAM policies primarily be managed?", "opts": {"A": "Individual VM", "B": "Organization", "C": "Bucket", "D": "Snapshot"}, "correct": "B"}, {"id": "iam-40", "module": "IAM", "q": "Which combination follows Google Cloud IAM best practices?", "opts": {"A": "Owner + Shared Password", "B": "Service Account + Least Privilege + Google Groups", "C": "Public Bucket + Editor", "D": "Owner Role for Everyone"}, "correct": "B"}, {"id": "iam-41", "module": "IAM", "q": "A development team needs temporary access to a production project for one week. After that, access should automatically expire. Which is the BEST solution?", "opts": {"A": "Give them the Owner role and remove it later manually.", "B": "Give them the Editor role permanently.", "C": "Use IAM Conditions with a time-based expiration.", "D": "Create a new production project."}, "correct": "C"}, {"id": "iam-42", "module": "IAM", "q": "A VM in Project A needs to read objects from a Cloud Storage bucket in Project B. What is the recommended approach?", "opts": {"A": "Copy the bucket into Project A.", "B": "Grant the VM's Service Account the required Storage role on the bucket in Project B.", "C": "Make the bucket public.", "D": "Use the Owner role in both projects."}, "correct": "B"}, {"id": "iam-43", "module": "IAM", "q": "A developer receives: Permission denied: compute.instances.create What is the MOST likely cause?", "opts": {"A": "The VM is stopped.", "B": "The user lacks the required IAM permission.", "C": "Billing is disabled.", "D": "The bucket is private."}, "correct": "B"}, {"id": "iam-44", "module": "IAM", "q": "A company has 100 projects. Every project needs identical security policies. Where should the policy be applied?", "opts": {"A": "Every VM", "B": "Every project individually", "C": "Organization", "D": "Storage buckets"}, "correct": "C"}, {"id": "iam-45", "module": "IAM", "q": "A Service Account should only upload objects to Cloud Storage. Which role is most appropriate?", "opts": {"A": "Storage Admin", "B": "Storage Object Admin", "C": "Owner", "D": "Editor"}, "correct": "B"}, {"id": "iam-46", "module": "IAM", "q": "You accidentally assign the Owner role to every employee. Which security issue does this create?", "opts": {"A": "Reduced availability", "B": "Excessive privileges", "C": "Higher network latency", "D": "More storage costs"}, "correct": "B"}, {"id": "iam-47", "module": "IAM", "q": "Which statement about IAM Conditions is TRUE?", "opts": {"A": "They replace Service Accounts.", "B": "They allow conditional access based on attributes such as time or resource.", "C": "They only work for Compute Engine.", "D": "They encrypt IAM policies."}, "correct": "B"}, {"id": "iam-48", "module": "IAM", "q": "A Compute Engine VM accesses Cloud SQL using a Service Account. The administrator removes the Cloud SQL Client role from that Service Account. What happens?", "opts": {"A": "The VM immediately loses the associated access once updated credentials are used.", "B": "Nothing changes.", "C": "The VM is deleted.", "D": "The operating system is reinstalled."}, "correct": "A"}, {"id": "iam-49", "module": "IAM", "q": "A company wants all AI engineers to receive identical permissions. Which approach requires the least administration?", "opts": {"A": "Assign permissions individually.", "B": "Use Google Groups.", "C": "Make everyone Owner.", "D": "Use a shared administrator account."}, "correct": "B"}, {"id": "iam-50", "module": "IAM", "q": "A project contains: Compute Engine Cloud SQL BigQuery A user only needs to administer BigQuery. Which role should you choose?", "opts": {"A": "Editor", "B": "Owner", "C": "BigQuery Admin", "D": "Compute Admin"}, "correct": "C"}, {"id": "iam-51", "module": "IAM", "q": "Which identity type is not intended for human users?", "opts": {"A": "Google Account", "B": "Cloud Identity User", "C": "Service Account", "D": "Google Workspace User"}, "correct": "C"}, {"id": "iam-52", "module": "IAM", "q": "A Folder contains 50 projects. A user receives Viewer at the Folder level. What access will they have?", "opts": {"A": "View only the folder.", "B": "View all resources within the projects under that folder (subject to inheritance).", "C": "Owner on every project.", "D": "No access."}, "correct": "B"}, {"id": "iam-53", "module": "IAM", "q": "A company wants to reduce the risk of credential theft in applications. What is the BEST recommendation?", "opts": {"A": "Embed passwords in code.", "B": "Use Service Accounts.", "C": "Use shared administrator accounts.", "D": "Make resources public."}, "correct": "B"}, {"id": "iam-54", "module": "IAM", "q": "Which statement about Custom Roles is TRUE?", "opts": {"A": "Google automatically creates them.", "B": "They always contain every permission.", "C": "Organizations define the included permissions.", "D": "They replace predefined roles."}, "correct": "C"}, {"id": "iam-55", "module": "IAM", "q": "A developer can start and stop VMs but cannot create new ones. Which IAM principle is being followed?", "opts": {"A": "Elasticity", "B": "High Availability", "C": "Principle of Least Privilege", "D": "Multi-tenancy"}, "correct": "C"}, {"id": "iam-56", "module": "IAM", "q": "A company wants centralized identity management for employees. Which identity type is most appropriate?", "opts": {"A": "Service Accounts", "B": "Google Groups", "C": "Cloud Identity (or Google Workspace identities)", "D": "Snapshots"}, "correct": "C"}, {"id": "iam-57", "module": "IAM", "q": "What happens if a role is assigned at the Organization level?", "opts": {"A": "Only the organization is affected.", "B": "Child folders and projects inherit the permissions.", "C": "Projects lose their own IAM policies.", "D": "IAM inheritance stops."}, "correct": "B"}, {"id": "iam-58", "module": "IAM", "q": "Which role should be avoided for routine administrative tasks whenever possible?", "opts": {"A": "Compute Viewer", "B": "Storage Viewer", "C": "Owner", "D": "BigQuery Viewer"}, "correct": "C"}, {"id": "iam-59", "module": "IAM", "q": "A company wants applications to authenticate without long-lived keys. Which approach is preferred?", "opts": {"A": "Store JSON keys in source code.", "B": "Use attached Service Accounts and short-lived credentials.", "C": "Share an administrator password.", "D": "Use public buckets."}, "correct": "B"}, {"id": "iam-60", "module": "IAM", "q": "Which combination represents Google Cloud IAM best practices?", "opts": {"A": "Owner + Shared Password", "B": "Service Accounts + Least Privilege + Google Groups + Predefined Roles", "C": "Public Buckets + Editor", "D": "Shared Administrator Account"}, "correct": "B"}, {"id": "iam-61", "module": "IAM", "q": "A software developer needs to upload new objects to a Cloud Storage bucket but must not delete, overwrite, or read existing objects. Which predefined role is the best choice?", "opts": {"A": "Storage Admin", "B": "Storage Object Admin", "C": "Storage Object Creator", "D": "Storage Object Viewer"}, "correct": "C"}, {"id": "iam-62", "module": "IAM", "q": "A user belongs to two Google Groups: Group A has the Viewer role. Group B has the Compute Admin role. Both roles apply to the same project. What effective access does the user receive?", "opts": {"A": "Viewer only", "B": "Compute Admin only", "C": "The combined permissions of Viewer and Compute Admin", "D": "No access because the roles conflict"}, "correct": "C"}, {"id": "iam-63", "module": "IAM", "q": "A company wants to give an external consultant access to only one project. Where should the role be assigned?", "opts": {"A": "Organization level", "B": "Folder level", "C": "The specific project", "D": "Billing-account level"}, "correct": "C"}, {"id": "iam-64", "module": "IAM", "q": "An administrator wants to know which users and service accounts have roles on a project. Which command should be used?", "opts": {"A": "gcloud projects describe PROJECT_ID", "B": "gcloud projects get-iam-policy PROJECT_ID", "C": "gcloud iam roles list", "D": "gcloud auth list"}, "correct": "B"}, {"id": "iam-65", "module": "IAM", "q": "An employee changes departments from Finance to Engineering. The company manages access through Google Groups. What should the administrator do?", "opts": {"A": "Delete the employee’s Google account.", "B": "Change every project’s IAM policy manually.", "C": "Remove the employee from the Finance group and add them to the Engineering group.", "D": "Give the employee the Editor role."}, "correct": "C"}, {"id": "iam-66", "module": "IAM", "q": "A Compute Engine VM needs read-only access to a particular Cloud Storage bucket. Which solution provides the least privilege?", "opts": {"A": "Attach the default Compute Engine service account with Editor.", "B": "Create a dedicated service account and grant Storage Object Viewer on the bucket.", "C": "Grant Storage Admin to the developer who created the VM.", "D": "Make the bucket public."}, "correct": "B"}, {"id": "iam-67", "module": "IAM", "q": "A user can create service accounts but cannot assign project roles to them. What is the most likely explanation?", "opts": {"A": "Creating a service account and changing project IAM policies require different permissions.", "B": "Service accounts cannot receive roles.", "C": "Only Google Support can assign roles.", "D": "The project must be deleted and recreated."}, "correct": "A"}, {"id": "iam-68", "module": "IAM", "q": "Which statement correctly distinguishes a role from a permission?", "opts": {"A": "A permission contains several roles.", "B": "A role is a collection of permissions.", "C": "A permission identifies a user.", "D": "A role is a Google Cloud resource location."}, "correct": "B"}, {"id": "iam-69", "module": "IAM", "q": "A support engineer needs temporary production access every day between 9:00 a.m. and 5:00 p.m. Which feature can restrict when the role binding is effective?", "opts": {"A": "IAM Conditions", "B": "Cloud Storage lifecycle rules", "C": "Compute Engine metadata", "D": "Firewall priorities"}, "correct": "A"}, {"id": "iam-70", "module": "IAM", "q": "An organization wants to prevent employees from creating service-account keys. Which control is most appropriate?", "opts": {"A": "Cloud Storage IAM", "B": "An Organization Policy constraint", "C": "A VPC firewall rule", "D": "A project label"}, "correct": "B"}, {"id": "iam-71", "module": "IAM", "q": "A developer must deploy a Cloud Run service that uses a service account, but the developer must not directly impersonate that service account from a local computer. Which permission is primarily needed to attach the service account to the service?", "opts": {"A": "iam.serviceAccounts.actAs", "B": "iam.serviceAccounts.getAccessToken", "C": "resourcemanager.projects.delete", "D": "billing.accounts.update"}, "correct": "A"}, {"id": "iam-72", "module": "IAM", "q": "A user has the Service Account User role but cannot run: gcloud storage buckets list \\ --impersonate-service-account=app-sa@project.iam.gserviceaccount.com What additional role is most likely required?", "opts": {"A": "Service Account Token Creator", "B": "Storage Object Creator", "C": "Project Viewer", "D": "Compute Admin"}, "correct": "A"}, {"id": "iam-73", "module": "IAM", "q": "A company uses one service account with Editor access for all development, testing, and production applications. What is the most important improvement?", "opts": {"A": "Create separate, least-privileged service accounts for different workloads or environments.", "B": "Grant Owner instead of Editor.", "C": "Download additional JSON keys.", "D": "Make all resources publicly accessible."}, "correct": "A"}, {"id": "iam-74", "module": "IAM", "q": "An IAM binding is applied at a folder level. A new project is later created inside that folder. What happens?", "opts": {"A": "The new project inherits the applicable folder-level binding.", "B": "The binding applies only to old projects.", "C": "The folder IAM policy is copied and then deleted.", "D": "The project cannot have its own IAM policy."}, "correct": "A"}, {"id": "iam-75", "module": "IAM", "q": "A user receives PERMISSION_DENIED while attempting to delete a VM. What should the administrator identify first?", "opts": {"A": "The exact principal making the request and the missing permission", "B": "The project’s monthly cost", "C": "The VM’s CPU utilization", "D": "The boot-disk operating system"}, "correct": "A"}, {"id": "iam-76", "module": "IAM", "q": "Which principal type represents anyone on the internet, including people who are not authenticated?", "opts": {"A": "allAuthenticatedUsers", "B": "allUsers", "C": "domain:example.com", "D": "serviceAccount:example"}, "correct": "B"}, {"id": "iam-77", "module": "IAM", "q": "A team needs to create custom roles that can be used across every project in the company. At which level should the custom role normally be created?", "opts": {"A": "VM level", "B": "Bucket level", "C": "Organization level", "D": "Zone level"}, "correct": "C"}, {"id": "iam-78", "module": "IAM", "q": "An employee is removed from a Google Group that has Compute Admin on a project. What should happen to the employee’s access?", "opts": {"A": "The group-derived Compute Admin access is removed after membership and authorization changes propagate.", "B": "The employee keeps the role permanently.", "C": "The project is deleted.", "D": "The employee becomes Viewer automatically."}, "correct": "A"}, {"id": "iam-79", "module": "IAM", "q": "Which two practices best support least-privilege IAM administration?", "opts": {"A": "Grant roles to groups where practical.", "B": "Give every administrator the Owner role.", "C": "Use service-specific predefined roles.", "D": "Share one service-account key across teams."}, "correct": "A"}, {"id": "iam-80", "module": "IAM", "q": "A company wants a secure IAM design for 100 projects, multiple departments, and several production applications. Which solution is best?", "opts": {"A": "Give every employee Editor on the organization.", "B": "Use groups for employees, dedicated service accounts for workloads, predefined roles, folder-level inheritance, and IAM Conditions where needed.", "C": "Create one shared administrator account.", "D": "Make resources public to reduce permission errors."}, "correct": "B"}]};
+
+/* ===================== CONFIG ===================== */
+const EXAM_DURATION_SEC = 75 * 60; // 75 minutes
+const QUESTIONS_PER_MODULE = 15;
+const MAX_ATTEMPTS = 2;
+const PASS_THRESHOLD_PCT = 70;
+const ADMIN_CODE = "ACE-ADMIN-2026";
+const MODULE_ORDER = Object.keys(QUESTION_BANK);
+const TOTAL_QUESTIONS = MODULE_ORDER.length * QUESTIONS_PER_MODULE;
+
+// ---- Cloud storage bucket (KVdb.io) ----
+// This app is a static file with no server of its own, so it needs a small
+// free cloud key-value bucket to keep scores in sync across every student
+// and across every device. Leave this as "REPLACE_ME" and the app will walk
+// you through creating one, the first time you open the page.
+const KVDB_BUCKET_ID = "REPLACE_ME";
+
+/* ===================== STATE ===================== */
+let state = {
+  screen: 'home',      // setup | home | student-login | student-gate | exam | result | admin-login | admin-panel
+  roll: null,
+  studentRecord: null, // {roll, attempts:[...]}
+  exam: null,           // in-progress exam object
+  currentIndex: 0,
+  lastResult: null,
+  adminData: null,
+  loading: false,
+  errorMsg: '',
+  storageDown: false
+};
+
+const app = document.getElementById('app');
+let timerHandle = null;
+
+/* ===================== STORAGE HELPERS (KVdb.io) ===================== */
+const KVDB_BASE = 'https://kvdb.io/' + KVDB_BUCKET_ID + '/';
+
+async function storageGet(key) {
+  try {
+    const res = await fetch(KVDB_BASE + encodeURIComponent(key));
+    if (res.status === 404) return null;
+    if (!res.ok) { state.storageDown = true; return null; }
+    state.storageDown = false;
+    const text = await res.text();
+    return text === '' ? null : text;
+  } catch (e) {
+    state.storageDown = true;
+    return null;
+  }
+}
+async function storageSet(key, value) {
+  try {
+    const res = await fetch(KVDB_BASE + encodeURIComponent(key), {
+      method: 'POST',
+      body: value
+    });
+    state.storageDown = !res.ok;
+    return res.ok;
+  } catch (e) {
+    console.error('storage set failed', e);
+    state.storageDown = true;
+    return false;
+  }
+}
+async function storageDelete(key) {
+  try {
+    await fetch(KVDB_BASE + encodeURIComponent(key), { method: 'DELETE' });
+  } catch (e) { /* ignore */ }
+}
+async function storageList(prefix) {
+  try {
+    const res = await fetch(KVDB_BASE + '?prefix=' + encodeURIComponent(prefix) + '&format=json&limit=10000');
+    if (!res.ok) { state.storageDown = true; return []; }
+    state.storageDown = false;
+    const arr = await res.json();
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) {
+    state.storageDown = true;
+    return [];
+  }
+}
+
+/* ===================== FIRST-RUN BUCKET SETUP ===================== */
+async function createKvdbBucket(email) {
+  const res = await fetch('https://kvdb.io', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'email=' + encodeURIComponent(email)
+  });
+  if (!res.ok) throw new Error('Could not create a bucket (HTTP ' + res.status + ').');
+  const bucketId = (await res.text()).trim();
+  // Note: keys in a free-tier bucket expire after 7 days of no updates.
+  // That's fine for a single exam window. (Disabling expiry entirely is a
+  // paid-plan feature on kvdb.io, so we deliberately don't attempt it here
+  // — trying to do so caused the free bucket to reject writes.)
+  return bucketId;
+}
+
+function renderSetup(){
+  app.innerHTML = `
+    <div class="screen">
+      <div class="eyebrow">One-time setup</div>
+      <h1 class="hero">Connect a storage bucket</h1>
+      <p class="lede">This exam app needs a small free cloud bucket (via kvdb.io) to keep every student's roll number, attempts, and scores in sync. This only has to be done once, by whoever is setting the exam up &mdash; students will never see this screen once it's configured.</p>
+      <div class="card">
+        <div class="field">
+          <label for="setup-email">Your email (used only to recover the bucket if needed)</label>
+          <input id="setup-email" type="email" placeholder="you@example.com" autocomplete="off" />
+        </div>
+        <div class="error-text" id="setup-error"></div>
+        <button class="btn btn-primary btn-block" id="setup-btn" style="margin-top:10px;">Create storage bucket</button>
+        <div id="setup-result" style="margin-top:20px;"></div>
+      </div>
+    </div>
+  `;
+  document.getElementById('setup-btn').onclick = async () => {
+    const email = document.getElementById('setup-email').value.trim();
+    const errEl = document.getElementById('setup-error');
+    const btn = document.getElementById('setup-btn');
+    if (!email) { errEl.textContent = 'Please enter an email address.'; return; }
+    errEl.textContent = '';
+    btn.disabled = true;
+    btn.textContent = 'Creating…';
+    try {
+      const bucketId = await createKvdbBucket(email);
+      document.getElementById('setup-result').innerHTML = `
+        <div class="stub">
+          <div class="stub-main">
+            <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">Your bucket ID:</div>
+            <div class="mono" style="font-size:15px;background:var(--surface-3);padding:10px 12px;border-radius:8px;word-break:break-all;">${escapeHtml(bucketId)}</div>
+          </div>
+        </div>
+        <p class="hint" style="margin-top:14px;">
+          Copy that ID. In the HTML file, find the line<br/>
+          <span class="mono">const KVDB_BUCKET_ID = "REPLACE_ME";</span><br/>
+          and replace <span class="mono">REPLACE_ME</span> with the ID above. Save the file, re-upload it to GitHub (commit the change), and reload this page &mdash; the real exam app will load from then on for you and every student.
+        </p>
+        <p class="hint" style="margin-top:10px;">
+          Note: on the free plan, any record that goes 7 full days without being read or updated will quietly expire. That's fine for a normal exam window; just don't let a class go silent on this for over a week between attempts.
+        </p>
+      `;
+      btn.style.display = 'none';
+    } catch (e) {
+      errEl.textContent = e.message || 'Something went wrong creating the bucket. Try again.';
+      btn.disabled = false;
+      btn.textContent = 'Create storage bucket';
+    }
+  };
+}
+
+function studentKey(roll){ return 'student:' + roll; }
+function examStateKey(roll){ return 'examstate:' + roll; }
+
+async function getStudentRecord(roll){
+  const raw = await storageGet(studentKey(roll));
+  if (!raw) return { roll, attempts: [] };
+  try { return JSON.parse(raw); } catch(e){ return { roll, attempts: [] }; }
+}
+async function saveStudentRecord(rec){
+  await storageSet(studentKey(rec.roll), JSON.stringify(rec));
+}
+async function getExamState(roll){
+  const raw = await storageGet(examStateKey(roll));
+  if (!raw) return null;
+  try { return JSON.parse(raw); } catch(e){ return null; }
+}
+async function saveExamState(roll, exam){
+  await storageSet(examStateKey(roll), JSON.stringify(exam));
+}
+async function clearExamState(roll){
+  await storageDelete(examStateKey(roll));
+}
+
+/* ===================== UTIL ===================== */
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function normalizeRoll(v){
+  return (v || '').trim().toUpperCase().replace(/\s+/g,'');
+}
+function fmtTime(totalSec){
+  const s = Math.max(0, Math.ceil(totalSec));
+  const m = Math.floor(s / 60);
+  const ss = s % 60;
+  return String(m).padStart(2,'0') + ':' + String(ss).padStart(2,'0');
+}
+function fmtDate(ts){
+  if (!ts) return '—';
+  const d = new Date(ts);
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}) + ' ' +
+         d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+}
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ===================== EXAM BUILD ===================== */
+function shuffleOptions(q){
+  const letters = ['A','B','C','D'];
+  const entries = letters.map(l => ({ text: q.opts[l], wasCorrect: l === q.correct }));
+  const shuffled = shuffle(entries);
+  const newOpts = {};
+  let newCorrect = 'A';
+  shuffled.forEach((e, i) => {
+    const letter = letters[i];
+    newOpts[letter] = e.text;
+    if (e.wasCorrect) newCorrect = letter;
+  });
+  return { ...q, opts: newOpts, correct: newCorrect };
+}
+
+function buildExamQuestions(){
+  let pool = [];
+  MODULE_ORDER.forEach(mod => {
+    const picked = shuffle(QUESTION_BANK[mod]).slice(0, QUESTIONS_PER_MODULE);
+    picked.forEach(q => pool.push(shuffleOptions(q)));
+  });
+  return shuffle(pool);
+}
+
+/* ===================== RENDER ===================== */
+function render(){
+  if (state.screen === 'setup') return renderSetup();
+  if (state.screen === 'home') return renderHome();
+  if (state.screen === 'student-login') return renderStudentLogin();
+  if (state.screen === 'student-gate') return renderStudentGate();
+  if (state.screen === 'exam') return renderExam();
+  if (state.screen === 'result') return renderResult();
+  if (state.screen === 'admin-login') return renderAdminLogin();
+  if (state.screen === 'admin-panel') return renderAdminPanel();
+}
+
+function shell(inner, opts={}){
+  app.innerHTML = `
+    <div class="brandbar">
+      <div class="brand">
+        <div class="brand-mark">CE</div>
+        <div>
+          <div class="brand-name">ACE Practice Exam</div>
+          <div class="brand-sub">Associate Cloud Engineer &middot; Timed Assessment</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        ${opts.showHome !== false ? '<button class="linklike" id="nav-home">&larr; Home</button>' : ''}
+      </div>
+    </div>
+    ${state.storageDown ? `<div class="hint" style="color:var(--danger);border:1px solid #5A2323;background:var(--danger-dim);padding:10px 14px;border-radius:var(--radius-sm);margin-bottom:14px;">Couldn't reach the results storage service just now. Your answers are still being kept in this tab, but re-check your connection before submitting.</div>` : ''}
+    ${inner}
+    <footer class="foot">60 questions &middot; 75 minutes &middot; 4 modules &middot; 2 attempts</footer>
+  `;
+  const homeBtn = document.getElementById('nav-home');
+  if (homeBtn) homeBtn.onclick = () => { stopTimer(); state.screen = 'home'; state.errorMsg=''; render(); };
+}
+
+function renderHome(){
+  shell(`
+    <div class="screen">
+      <div class="eyebrow">Google Cloud &middot; Associate Cloud Engineer</div>
+      <h1 class="hero">Certification practice exam</h1>
+      <p class="lede">A timed 60-question assessment pulled at random from four practice modules: Billing &amp; Resource Hierarchy, Compute Engine, Cloud Storage, and IAM. Each student gets two attempts.</p>
+      <div class="choice-tiles">
+        <div class="tile" id="tile-student">
+          <div class="tile-icon">Roll number required</div>
+          <div class="tile-title">Take the exam</div>
+          <div class="tile-desc">Log in with your roll number to begin or resume your attempt.</div>
+        </div>
+        <div class="tile" id="tile-admin">
+          <div class="tile-icon">Access code required</div>
+          <div class="tile-title">Admin dashboard</div>
+          <div class="tile-desc">Review every student's scores and export results.</div>
+        </div>
+      </div>
+      <div class="module-list">
+        ${MODULE_ORDER.map(m => `
+          <div class="module-row">
+            <span class="mname">${escapeHtml(m)}</span>
+            <span class="mcount">${QUESTIONS_PER_MODULE} of ${QUESTION_BANK[m].length} bits</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `, {showHome:false});
+  document.getElementById('tile-student').onclick = () => { state.screen='student-login'; state.errorMsg=''; render(); };
+  document.getElementById('tile-admin').onclick = () => { state.screen='admin-login'; state.errorMsg=''; render(); };
+}
+
+function renderStudentLogin(){
+  shell(`
+    <div class="center-screen">
+      <div class="card">
+        <div class="eyebrow">Student sign-in</div>
+        <h1 class="hero" style="font-size:26px;">Enter your roll number</h1>
+        <p class="lede" style="margin-bottom:18px;">This identifies your attempts. Use the exact roll number your instructor assigned you &mdash; it cannot be changed later.</p>
+        <div class="field">
+          <label for="roll-input">Roll number</label>
+          <input id="roll-input" type="text" placeholder="e.g. CE2026-014" autocomplete="off" autocapitalize="characters" />
+        </div>
+        <div class="error-text" id="login-error"></div>
+        <button class="btn btn-primary btn-block" id="continue-btn" style="margin-top:8px;">Continue</button>
+      </div>
+    </div>
+  `);
+  const input = document.getElementById('roll-input');
+  input.focus();
+  const go = async () => {
+    const roll = normalizeRoll(input.value);
+    if (!roll){
+      document.getElementById('login-error').textContent = 'Please enter your roll number.';
+      return;
+    }
+    state.loading = true;
+    document.getElementById('continue-btn').textContent = 'Checking…';
+    document.getElementById('continue-btn').disabled = true;
+    state.roll = roll;
+    const rec = await getStudentRecord(roll);
+    state.studentRecord = rec;
+    const inProgress = await getExamState(roll);
+    if (inProgress) {
+      const elapsed = (Date.now() - inProgress.startedAt) / 1000;
+      const remaining = inProgress.durationSec - elapsed;
+      if (remaining <= 0) {
+        await finalizeExam(inProgress, true);
+        return;
+      }
+      state.exam = inProgress;
+      state.currentIndex = 0;
+      state.screen = 'exam';
+      render();
+      startTimer();
+      return;
+    }
+    state.screen = 'student-gate';
+    render();
+  };
+  document.getElementById('continue-btn').onclick = go;
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+}
+
+function renderStudentGate(){
+  const rec = state.studentRecord;
+  const used = rec.attempts.length;
+  const remaining = MAX_ATTEMPTS - used;
+  const best = rec.attempts.reduce((m,a) => Math.max(m, a.score), -1);
+
+  let body;
+  if (remaining <= 0) {
+    body = `
+      <div class="eyebrow">Attempts exhausted</div>
+      <h1 class="hero" style="font-size:26px;">No attempts remaining</h1>
+      <p class="lede">Roll number <b class="mono">${escapeHtml(state.roll)}</b> has already used both attempts.</p>
+      <div class="result-grid">
+        <div class="stat-box"><div class="stat-label">Best score</div><div class="stat-value">${best}/${TOTAL_QUESTIONS}</div></div>
+        <div class="stat-box"><div class="stat-label">Attempts used</div><div class="stat-value">${used}/${MAX_ATTEMPTS}</div></div>
+      </div>
+      <p class="hint" style="margin-top:18px;">Only your instructor can see the full class results. Contact them if you believe this is an error.</p>
+    `;
+  } else {
+    body = `
+      <div class="eyebrow">Attempt ${used + 1} of ${MAX_ATTEMPTS}</div>
+      <h1 class="hero" style="font-size:26px;">Ready when you are</h1>
+      <p class="lede">Roll number <b class="mono">${escapeHtml(state.roll)}</b>. Review the rules, then begin.</p>
+      <div class="stub" style="margin:18px 0;">
+        <div class="stub-main">
+          <div style="font-size:13.5px;color:var(--text-muted);line-height:1.8;">
+            60 questions total &middot; 15 randomly drawn from each of 4 modules<br/>
+            75 minutes on the clock, counting down from the moment you begin<br/>
+            The timer keeps running even if you close this tab &mdash; return before it hits zero<br/>
+            You will see your final score the instant you submit<br/>
+            Only your instructor can see anyone's scores
+          </div>
+        </div>
+        <div class="stub-tab">
+          <div class="stub-label">Duration</div>
+          <div class="stub-value">75:00</div>
+        </div>
+      </div>
+      ${used > 0 ? `<p class="hint">Your first attempt scored <b>${rec.attempts[0].score}/${TOTAL_QUESTIONS}</b>.</p>` : ''}
+      <button class="btn btn-primary btn-block" id="begin-btn">Begin exam</button>
+    `;
+  }
+
+  shell(`<div class="screen"><div class="card">${body}</div></div>`);
+  const beginBtn = document.getElementById('begin-btn');
+  if (beginBtn) beginBtn.onclick = beginExam;
+}
+
+async function beginExam(){
+  const rec = state.studentRecord;
+  const attemptNo = rec.attempts.length + 1;
+  const questions = buildExamQuestions();
+  const exam = {
+    roll: state.roll,
+    attemptNo,
+    startedAt: Date.now(),
+    durationSec: EXAM_DURATION_SEC,
+    questions,
+    answers: {}
+  };
+  state.exam = exam;
+  state.currentIndex = 0;
+  await saveExamState(state.roll, exam);
+  state.screen = 'exam';
+  render();
+  startTimer();
+}
+
+function renderExam(){
+  const exam = state.exam;
+  const q = exam.questions[state.currentIndex];
+  const answeredCount = Object.keys(exam.answers).length;
+  const remaining = exam.durationSec - (Date.now() - exam.startedAt) / 1000;
+
+  const segHtml = MODULE_ORDER.map((mod) => {
+    const dots = exam.questions
+      .map((qq, i) => ({qq, i}))
+      .filter(x => x.qq.module === mod)
+      .map(x => {
+        let cls = 'progress-dot';
+        if (x.i === state.currentIndex) cls += ' current';
+        else if (exam.answers[x.qq.id]) cls += ' answered';
+        return `<div class="${cls}"></div>`;
+      }).join('');
+    return `<div class="progress-seg">${dots}</div>`;
+  }).join('');
+
+  const optionsHtml = ['A','B','C','D'].map(letter => {
+    const selected = exam.answers[q.id] === letter;
+    return `
+      <div class="option ${selected ? 'selected' : ''}" data-letter="${letter}">
+        <div class="opt-letter">${letter}</div>
+        <div class="opt-text">${escapeHtml(q.opts[letter])}</div>
+      </div>
+    `;
+  }).join('');
+
+  const jumpHtml = exam.questions.map((qq, i) => {
+    let cls = 'jbtn';
+    if (i === state.currentIndex) cls += ' current';
+    else if (exam.answers[qq.id]) cls += ' answered';
+    return `<button class="${cls}" data-jump="${i}">${i+1}</button>`;
+  }).join('');
+
+  shell(`
+    <div class="exam-header">
+      <div class="exam-id">Roll <b>${escapeHtml(exam.roll)}</b> &middot; Attempt ${exam.attemptNo}/${MAX_ATTEMPTS} &middot; ${answeredCount}/${TOTAL_QUESTIONS} answered</div>
+      <div class="timer" id="timer-display">${fmtTime(remaining)}</div>
+    </div>
+    <div class="progress-strip">${segHtml}</div>
+    <div class="card">
+      <div class="module-tag">${escapeHtml(q.module)}</div>
+      <div class="qcounter">Question ${state.currentIndex + 1} of ${TOTAL_QUESTIONS}</div>
+      <div class="qtext">${escapeHtml(q.q)}</div>
+      <div class="options">${optionsHtml}</div>
+      <div class="exam-nav">
+        <button class="btn btn-ghost" id="prev-btn" ${state.currentIndex === 0 ? 'disabled' : ''}>&larr; Previous</button>
+        <div class="btn-row">
+          ${state.currentIndex === exam.questions.length - 1
+            ? `<button class="btn btn-primary" id="submit-btn">Submit exam</button>`
+            : `<button class="btn btn-primary" id="next-btn">Next &rarr;</button>`}
+        </div>
+      </div>
+      <div class="jumpgrid-wrap">
+        <div class="jumpgrid-label">Jump to question</div>
+        <div class="jumpgrid">${jumpHtml}</div>
+      </div>
+      <div style="text-align:right;margin-top:18px;">
+        <button class="btn btn-ghost" id="submit-early-btn" style="font-size:12.5px;padding:8px 14px;">Submit now</button>
+      </div>
+    </div>
+  `, {showHome:false});
+
+  document.querySelectorAll('.option').forEach(el => {
+    el.onclick = () => selectAnswer(q.id, el.getAttribute('data-letter'));
+  });
+  document.querySelectorAll('[data-jump]').forEach(el => {
+    el.onclick = () => { state.currentIndex = parseInt(el.getAttribute('data-jump'), 10); render(); };
+  });
+  const prevBtn = document.getElementById('prev-btn');
+  if (prevBtn) prevBtn.onclick = () => { state.currentIndex--; render(); };
+  const nextBtn = document.getElementById('next-btn');
+  if (nextBtn) nextBtn.onclick = () => { state.currentIndex++; render(); };
+  const submitBtn = document.getElementById('submit-btn');
+  if (submitBtn) submitBtn.onclick = () => confirmSubmit();
+  const submitEarlyBtn = document.getElementById('submit-early-btn');
+  if (submitEarlyBtn) submitEarlyBtn.onclick = () => confirmSubmit();
+}
+
+function selectAnswer(qId, letter){
+  state.exam.answers[qId] = letter;
+  saveExamState(state.roll, state.exam);
+  render();
+}
+
+function confirmSubmit(){
+  const exam = state.exam;
+  const unanswered = TOTAL_QUESTIONS - Object.keys(exam.answers).length;
+  const msg = unanswered > 0
+    ? `You have ${unanswered} unanswered question${unanswered===1?'':'s'}. Submit anyway?`
+    : `Submit your exam? You won't be able to change answers after this.`;
+  if (window.confirm(msg)) {
+    finalizeExam(exam, false);
+  }
+}
+
+async function finalizeExam(exam, autoSubmitted){
+  stopTimer();
+  let score = 0;
+  exam.questions.forEach(q => {
+    if (exam.answers[q.id] === q.correct) score++;
+  });
+  const rec = await getStudentRecord(exam.roll);
+  const attemptRecord = {
+    attemptNo: exam.attemptNo,
+    score,
+    total: TOTAL_QUESTIONS,
+    startedAt: exam.startedAt,
+    submittedAt: Date.now(),
+    autoSubmitted
+  };
+  rec.attempts.push(attemptRecord);
+  rec.roll = exam.roll;
+  await saveStudentRecord(rec);
+  await clearExamState(exam.roll);
+
+  state.studentRecord = rec;
+  state.lastResult = attemptRecord;
+  state.exam = null;
+  state.screen = 'result';
+  render();
+}
+
+function renderResult(){
+  const r = state.lastResult;
+  const pct = Math.round((r.score / r.total) * 100);
+  const passed = pct >= PASS_THRESHOLD_PCT;
+  const rec = state.studentRecord;
+  const remaining = MAX_ATTEMPTS - rec.attempts.length;
+
+  shell(`
+    <div class="screen">
+      <div class="card">
+        <div class="eyebrow">${r.autoSubmitted ? 'Time expired &middot; auto-submitted' : 'Submitted'}</div>
+        <div class="score-hero">
+          <div class="score-num" style="color:${passed ? 'var(--accent)' : 'var(--danger)'}">${r.score}</div>
+          <div class="score-den">out of ${r.total} &middot; attempt ${r.attemptNo} of ${MAX_ATTEMPTS}</div>
+          <div class="score-pct ${passed ? 'pass' : 'fail'}">${pct}% &middot; ${passed ? 'Above' : 'Below'} the ${PASS_THRESHOLD_PCT}% practice benchmark</div>
+        </div>
+        <div class="result-grid">
+          <div class="stat-box"><div class="stat-label">Roll number</div><div class="stat-value mono" style="font-size:16px;">${escapeHtml(state.roll)}</div></div>
+          <div class="stat-box"><div class="stat-label">Attempts remaining</div><div class="stat-value">${remaining}</div></div>
+        </div>
+        <p class="hint" style="margin-top:20px;">Your score has been recorded. Only your instructor can view scores across the class &mdash; you won't see anyone else's, and no one else will see yours.</p>
+        <div class="btn-row" style="margin-top:14px;">
+          <button class="btn btn-ghost" id="done-btn">Done</button>
+        </div>
+      </div>
+    </div>
+  `, {showHome:false});
+  document.getElementById('done-btn').onclick = () => { state.screen = 'home'; render(); };
+}
+
+/* ===================== ADMIN ===================== */
+function renderAdminLogin(){
+  shell(`
+    <div class="center-screen">
+      <div class="card">
+        <div class="eyebrow">Instructor access</div>
+        <h1 class="hero" style="font-size:26px;">Admin dashboard</h1>
+        <p class="lede" style="margin-bottom:18px;">Enter the access code to view every student's attempts and export results.</p>
+        <div class="field">
+          <label for="admin-input">Access code</label>
+          <input id="admin-input" type="password" placeholder="Access code" autocomplete="off" />
+        </div>
+        <div class="error-text" id="admin-error"></div>
+        <button class="btn btn-primary btn-block" id="admin-continue-btn" style="margin-top:8px;">Enter dashboard</button>
+      </div>
+    </div>
+  `);
+  const input = document.getElementById('admin-input');
+  input.focus();
+  const go = async () => {
+    if (input.value !== ADMIN_CODE) {
+      document.getElementById('admin-error').textContent = 'Incorrect access code.';
+      return;
+    }
+    document.getElementById('admin-continue-btn').textContent = 'Loading…';
+    document.getElementById('admin-continue-btn').disabled = true;
+    await loadAdminData();
+    state.screen = 'admin-panel';
+    render();
+  };
+  document.getElementById('admin-continue-btn').onclick = go;
+  input.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+}
+
+async function loadAdminData(){
+  const keys = await storageList('student:');
+  const records = [];
+  for (const k of keys) {
+    const raw = await storageGet(k);
+    if (!raw) continue;
+    try {
+      const rec = JSON.parse(raw);
+      records.push(rec);
+    } catch(e) {}
+  }
+  records.sort((a,b) => (a.roll || '').localeCompare(b.roll || ''));
+  state.adminData = records;
+}
+
+function renderAdminPanel(){
+  const records = state.adminData || [];
+  const rows = records.map(rec => {
+    const a1 = rec.attempts[0];
+    const a2 = rec.attempts[1];
+    const best = rec.attempts.reduce((m,a) => Math.max(m, a.score), 0);
+    const last = rec.attempts.length ? rec.attempts[rec.attempts.length - 1].submittedAt : null;
+    return `
+      <tr>
+        <td class="mono">${escapeHtml(rec.roll)}</td>
+        <td>${a1 ? a1.score + '/' + a1.total : '—'}${a1 && a1.autoSubmitted ? ' <span class="hint">(auto)</span>' : ''}</td>
+        <td>${a2 ? a2.score + '/' + a2.total : '—'}${a2 && a2.autoSubmitted ? ' <span class="hint">(auto)</span>' : ''}</td>
+        <td><b>${rec.attempts.length ? best + '/' + rec.attempts[0].total : '—'}</b></td>
+        <td>${rec.attempts.length}/${MAX_ATTEMPTS}</td>
+        <td class="mono" style="font-size:11.5px;color:var(--text-muted);">${fmtDate(last)}</td>
+      </tr>
+    `;
+  }).join('');
+
+  const totalStudents = records.length;
+  const completedBoth = records.filter(r => r.attempts.length >= MAX_ATTEMPTS).length;
+  const avgBest = totalStudents ? Math.round(records.reduce((s,r) => s + Math.max(0,...r.attempts.map(a=>a.score),0), 0) / totalStudents) : 0;
+
+  shell(`
+    <div class="screen">
+      <div class="eyebrow">Instructor dashboard</div>
+      <h1 class="hero" style="font-size:26px;">All student results</h1>
+      <div class="result-grid" style="grid-template-columns:1fr 1fr 1fr;">
+        <div class="stat-box"><div class="stat-label">Students</div><div class="stat-value">${totalStudents}</div></div>
+        <div class="stat-box"><div class="stat-label">Used both attempts</div><div class="stat-value">${completedBoth}</div></div>
+        <div class="stat-box"><div class="stat-label">Avg. best score</div><div class="stat-value">${avgBest}/${TOTAL_QUESTIONS}</div></div>
+      </div>
+      <div class="card" style="padding:20px 22px;">
+        <div class="btn-row" style="justify-content:space-between;margin-bottom:6px;">
+          <div class="hint">${totalStudents} record${totalStudents===1?'':'s'} loaded</div>
+          <div class="btn-row">
+            <button class="btn btn-ghost" id="refresh-btn" style="font-size:12.5px;padding:9px 14px;">Refresh</button>
+            <button class="btn btn-primary" id="download-btn" style="font-size:12.5px;padding:9px 14px;">Download CSV</button>
+          </div>
+        </div>
+        ${totalStudents === 0 ? `<p class="hint" style="margin-top:14px;">No students have started the exam yet.</p>` : `
+        <div style="overflow-x:auto;">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Roll number</th><th>Attempt 1</th><th>Attempt 2</th><th>Best</th><th>Attempts used</th><th>Last submitted</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+        `}
+      </div>
+    </div>
+  `);
+  document.getElementById('refresh-btn').onclick = async () => {
+    document.getElementById('refresh-btn').textContent = 'Refreshing…';
+    await loadAdminData();
+    render();
+  };
+  document.getElementById('download-btn').onclick = downloadCsv;
+}
+
+function downloadCsv(){
+  const records = state.adminData || [];
+  const header = ['Roll Number','Attempt 1 Score','Attempt 1 Total','Attempt 1 Auto-Submitted','Attempt 1 Submitted At',
+                   'Attempt 2 Score','Attempt 2 Total','Attempt 2 Auto-Submitted','Attempt 2 Submitted At','Best Score','Attempts Used'];
+  const lines = [header.join(',')];
+  records.forEach(rec => {
+    const a1 = rec.attempts[0];
+    const a2 = rec.attempts[1];
+    const best = rec.attempts.reduce((m,a) => Math.max(m, a.score), 0);
+    const row = [
+      rec.roll,
+      a1 ? a1.score : '', a1 ? a1.total : '', a1 ? a1.autoSubmitted : '', a1 ? new Date(a1.submittedAt).toISOString() : '',
+      a2 ? a2.score : '', a2 ? a2.total : '', a2 ? a2.autoSubmitted : '', a2 ? new Date(a2.submittedAt).toISOString() : '',
+      rec.attempts.length ? best : '',
+      rec.attempts.length
+    ];
+    lines.push(row.map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+  });
+  const csv = lines.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'ace_exam_results_' + new Date().toISOString().slice(0,10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+/* ===================== TIMER ===================== */
+function startTimer(){
+  stopTimer();
+  timerHandle = setInterval(() => {
+    if (!state.exam || state.screen !== 'exam') { stopTimer(); return; }
+    const remaining = state.exam.durationSec - (Date.now() - state.exam.startedAt) / 1000;
+    const el = document.getElementById('timer-display');
+    if (el) {
+      el.textContent = fmtTime(remaining);
+      el.className = 'timer' + (remaining <= 60 ? ' danger' : remaining <= 300 ? ' warn' : '');
+    }
+    if (remaining <= 0) {
+      stopTimer();
+      finalizeExam(state.exam, true);
+    }
+  }, 1000);
+}
+function stopTimer(){
+  if (timerHandle) { clearInterval(timerHandle); timerHandle = null; }
+}
+
+/* ===================== INIT ===================== */
+if (KVDB_BUCKET_ID === 'REPLACE_ME') {
+  state.screen = 'setup';
+}
+render();
+
+</script>
+</body>
+</html>
