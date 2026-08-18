@@ -245,7 +245,7 @@ const TOTAL_QUESTIONS = MODULE_ORDER.length * QUESTIONS_PER_MODULE;
 // free cloud key-value bucket to keep scores in sync across every student
 // and across every device. Leave this as "REPLACE_ME" and the app will walk
 // you through creating one, the first time you open the page.
-const KVDB_BUCKET_ID = "85tm9hGV4Xugw2Jxxck4CF";
+const KVDB_BUCKET_ID = "REPLACE_ME";
 
 /* ===================== STATE ===================== */
 let state = {
@@ -364,7 +364,7 @@ function renderSetup(){
         </div>
         <p class="hint" style="margin-top:14px;">
           Copy that ID. In the HTML file, find the line<br/>
-          <span class="mono">const KVDB_BUCKET_ID = "85tm9hGV4Xugw2Jxxck4CF";</span><br/>
+          <span class="mono">const KVDB_BUCKET_ID = "REPLACE_ME";</span><br/>
           and replace <span class="mono">REPLACE_ME</span> with the ID above. Save the file, re-upload it to GitHub (commit the change), and reload this page &mdash; the real exam app will load from then on for you and every student.
         </p>
         <p class="hint" style="margin-top:10px;">
